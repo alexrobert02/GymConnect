@@ -1,6 +1,5 @@
 package com.gymconnect.authserver.user;
 
-import com.gymconnect.authserver.token.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
