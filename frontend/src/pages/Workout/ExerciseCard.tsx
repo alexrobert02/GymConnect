@@ -1,6 +1,7 @@
 // ExerciseCard.js
 
 import React from 'react';
+import './ExerciseCard.scss'
 
 const ExerciseCard = ({ exercise }: { exercise: { id: number, title: string, imageUrl: string } }) => {
     return (

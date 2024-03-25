@@ -8,6 +8,8 @@ import RegisterPage from "../pages/Authentication/Register";
 import LoginProtectedRoute from "./loginProtectedRoute";
 import Home from "../pages/Home/Home";
 import ProfilePage from "../pages/Profile/Profile";
+import NotFound from "../pages/NotFound/NotFound";
+import WorkoutPage from "../pages/Workout/Workout";
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("token");
@@ -27,6 +29,10 @@ const PrivateRouteComponent: React.FC<PrivateRouteProps> = ({
 
 const router = createBrowserRouter([
   {
+    path: "*",
+    element: <NotFound />,
+  },
+  {
     path: "/",
     element: <LoginProtectedRoute />,
     children: [
@@ -41,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <PrivateRouteComponent component={ProfilePage} path="/home" />,
+      },
+      {
+        path: "/workout",
+        element: <PrivateRouteComponent component={WorkoutPage} path={"/workout"} />
       }
     ],
   },

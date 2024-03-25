@@ -47,7 +47,7 @@ function Navbar() {
 
   const items = [
     {
-      key: "2",
+      key: "1",
       title: "Home",
       label: (
         <Link to="/home" style={{ display: "flex", alignItems: "center"}}>
@@ -56,6 +56,12 @@ function Navbar() {
         </Link>
       ),
       style: linkStyles
+    },
+    {
+      key: "2",
+      title: "Your Workout Split",
+      label: <Link to="/workout">Your Workout Split</Link>,
+      style: { ...linkStyles, cursor: "default" },
     },
     {
       key: "6",

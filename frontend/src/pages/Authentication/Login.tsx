@@ -35,7 +35,7 @@ function LoginPage() {
     };
 
     return (
-        <div className="background-gradient">
+        <div className="auth-background-gradient">
         <div className="auth-container">
             <div className="auth-box">
                 <h2 className="auth-header">Login</h2>

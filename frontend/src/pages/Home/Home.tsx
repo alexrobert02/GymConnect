@@ -33,16 +33,16 @@ const HomePage = () => {
     }, [navigate]);
 
     return (
-        <div className="background-gradient-home">
+        <div className="home-background-gradient-home">
         <div className="home-container">
-            <div className="grid-container">
-                <header className="header">
+            <div className="home-grid-container">
+                <header className="home-header">
                     <h1>Welcome to GymConnect</h1>
                 </header>
-                <div className="background-wrapper">
-                    <img src={backgroundImage} alt="Background" className="background-image"/>
+                <div className="home-background-wrapper">
+                    <img src={backgroundImage} alt="Background" className="home-background-image"/>
                 </div>
-                <div className="start-journey">
+                <div className="home-start-journey">
                     <h2>Start your journey here</h2>
                 </div>
             </div>

@@ -1,22 +1,3 @@
-.profile-page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.profile-info {
-  background-color: #f0f0f0;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.exercise-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  grid-gap: 20px;
-}
-
 .exercise-card {
   background-color: #fff;
   border: 1px solid #ddd;
@@ -45,8 +26,4 @@
 .exercise-image {
   width: 100%;
   height: auto;
-}
-
-p {
-  color: #000000;
 }
