@@ -22,7 +22,7 @@ function LoginPage() {
                 // Store the access token in localStorage
                 localStorage.setItem('token', data.access_token);
                 // Handle successful login, e.g., redirect to dashboard
-                navigate('/')
+                navigate('/home')
             } else {
                 // Authentication failed
                 console.log('Authentication failed');
@@ -35,9 +35,10 @@ function LoginPage() {
     };
 
     return (
+        <div className="background-gradient">
         <div className="auth-container">
             <div className="auth-box">
-                <h2 className="auth-header">Welcome to GymConnect</h2>
+                <h2 className="auth-header">Login</h2>
                 <form className="auth-form" onSubmit={e => e.preventDefault()}>
                     <input
                         type="email"
@@ -60,6 +61,7 @@ function LoginPage() {
                 <p className="forgot-password">Forgot your password? <a href="#">Reset it here</a></p>
                 <p className="signup-link">Don't have an account? <a href="/register">Sign up now</a></p>
             </div>
+        </div>
         </div>
     );
 }

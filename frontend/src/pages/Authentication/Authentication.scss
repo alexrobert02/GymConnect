@@ -1,3 +1,13 @@
+.background-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Set z-index to ensure it's behind everything */
+  background: linear-gradient(to bottom, #124069, #081b23); /* Blue gradient */
+}
+
 .auth-container {
   display: flex;
   justify-content: center;
@@ -6,16 +16,18 @@
 }
 
 .auth-box {
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.1); /* Adjust the opacity here */
   border-radius: 8px;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
   padding: 40px;
   width: 400px;
 }
 
+
 .auth-header {
-  color: #333;
-  margin-bottom: 30px;
+  color: #ffffff;
+  margin-bottom: 60px;
+  margin-top: 0px;
   text-align: center;
 }
 
@@ -48,7 +60,7 @@
 
 .forgot-password,
 .signup-link {
-  color: #555;
+  color: #ffffff;
   font-size: 14px;
   margin-top: 10px;
   text-align: center;

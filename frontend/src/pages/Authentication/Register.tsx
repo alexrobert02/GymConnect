@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+    import React, { useState } from 'react';
 import './Authentication.scss'; // You can style your register page in Register.scss file
+import api from '../../services/api'
+import {useNavigate} from "react-router-dom";
 
 function RegisterPage() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -22,21 +25,17 @@ function RegisterPage() {
         }
 
         try {
-            const response = await fetch('http://localhost:8082/api/v1/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
+            const response = await api.post('/api/v1/auth/register', {
+                email: email,
+                password: password,
+                role: "USER"
             });
 
-            if (response.ok) {
+            if (response.status === 200) {
                 // Registration successful
-                const data = await response.json();
+                const data = await response.data;
                 console.log('Registration successful:', data);
+                navigate('/')
                 // Handle successful registration, e.g., redirect to login page
             } else {
                 // Registration failed
@@ -54,6 +53,7 @@ function RegisterPage() {
     };
 
     return (
+        <div className="background-gradient">
         <div className="auth-container">
             <div className="auth-box">
                 <h2 className="auth-header">Create an Account</h2>
@@ -94,6 +94,7 @@ function RegisterPage() {
                 </form>
                 <p className="login-link">Already have an account? <a href="/login">Login here</a></p>
             </div>
+        </div>
         </div>
     );
 }
