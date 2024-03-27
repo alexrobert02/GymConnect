@@ -16,6 +16,14 @@ export const sendResetEmail = async (email: string): Promise<string> => {
     }
 };
 
+export const securedInstance = axios.create({
+    baseURL: 'http://localhost:8082',
+    headers: {
+        'Content-Type': 'application/json',
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+});
 
 
 export const resetPassword = async (

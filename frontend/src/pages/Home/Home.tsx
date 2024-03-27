@@ -24,7 +24,7 @@ const HomePage = () => {
             }
         };
 
-        fetchData()
+        //fetchData()
 
         // Check if the user is authenticated (you might have your own logic here)
         const token = localStorage.getItem('token');

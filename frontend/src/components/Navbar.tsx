@@ -16,29 +16,29 @@ function Navbar() {
   const [id, setId] = useState<string>("");
   const role = decodedToken?.role;
 
-  async function fetchUserInfo(email: string) {
-    try {
-      const response = await axios.get(
-        `http://localhost:8082/api/v1/users?email=${email}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      const data = response.data;
-      setId(data[0].id);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useEffect(() => {
-    if (studentName) {
-      fetchUserInfo(studentName);
-    }
-  }, [studentName]);
+  // async function fetchUserInfo(email: string) {
+  //   try {
+  //     const response = await axios.get(
+  //       `http://localhost:8082/api/v1/users?email=${email}`,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       }
+  //     );
+  //     const data = response.data;
+  //     setId(data[0].id);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+  //
+  // useEffect(() => {
+  //   if (studentName) {
+  //     fetchUserInfo(studentName);
+  //   }
+  // }, [studentName]);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -59,7 +59,7 @@ function Navbar() {
     },
     {
       key: "2",
-      title: "Your Workout Split",
+      title: "Workout",
       label: <Link to="/workout">Your Workout Split</Link>,
       style: { ...linkStyles, cursor: "default" },
     },
