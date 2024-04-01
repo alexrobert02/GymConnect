@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, Button } from 'antd';
+import { Modal, Form, Input, Button, InputNumber, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import SearchInput from "./searchInput";
 
@@ -10,14 +10,14 @@ const formItemLayout = {
     },
     wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 20 },
+        sm: { span: 19 },
     },
 };
 
 const formItemLayoutWithOutLabel = {
     wrapperCol: {
         xs: { span: 24, offset: 0 },
-        sm: { span: 20, offset: 5 },
+        sm: { span: 19, offset: 3 },
     },
 };
 
@@ -52,12 +52,10 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ isModalOpen, setIsModalOpen
 
     const handleOk = () => {
         form.validateFields().then((values) => {
-            // Handle form submission here
             console.log('Received values:', values);
             form.resetFields();
         });
         setIsModalOpen(false)
-
     };
 
     const handleCancel = () => {
@@ -77,6 +75,8 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ isModalOpen, setIsModalOpen
                     Add
                 </Button>,
             ]}
+            centered
+            //width={800}
         >
             <Form form={form} layout="horizontal">
                 <Form.Item
@@ -87,66 +87,92 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ isModalOpen, setIsModalOpen
                 >
                     <Input />
                 </Form.Item>
-                <Form.List
-                    name="names"
-                    rules={[
-                        {
-                            validator: async (_, names) => {
-                                if (!names || names.length < 1) {
-                                    return Promise.reject(new Error('At least 2 passengers'));
-                                }
-                            },
-                        },
-                    ]}
-                >
-                    {(fields, { add, remove }, { errors }) => (
-                        <>
-                            {fields.map((field, index) => (
-                                <Form.Item
-                                    {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                                    label={index === 0 ? 'Exercises' : ''}
-                                    required={false}
-                                    key={field.key}
-                                >
-                                    <Form.Item
-                                        {...field}
-                                        validateTrigger={['onChange', 'onBlur']}
-                                        noStyle
-                                    >
-                                        <SearchInput
-                                            mode="multiple"
-                                            value={value}
-                                            placeholder="Select users"
-                                            fetchOptions={fetchUserList}
-                                            onChange={(newValue) => {
-                                                setValue(newValue as UserValue);
-                                            }}
-                                            style={{ width: '100%' }}
-                                        />
-                                    </Form.Item>
-                                    {fields.length > 1 ? (
-                                        <MinusCircleOutlined
-                                            className="dynamic-delete-button"
-                                            onClick={() => remove(field.name)}
-                                        />
-                                    ) : null}
-                                </Form.Item>
-                            ))}
-                            <Form.Item {...formItemLayoutWithOutLabel}>
-                                <Button
-                                    type="dashed"
-                                    onClick={() => add()}
-                                    style={{ width: '60%' }}
-                                    icon={<PlusOutlined />}
-                                >
-                                    Add Exercise
-                                </Button>
-                                <Form.ErrorList errors={errors} />
-                            </Form.Item>
-                        </>
-                    )}
-                </Form.List>
-                {/* Add more form fields as needed */}
+                {/*<Form.List*/}
+                {/*    name="exercises"*/}
+                {/*    rules={[*/}
+                {/*        {*/}
+                {/*            validator: async (_, exercises) => {*/}
+                {/*                if (!exercises || exercises.length < 1) {*/}
+                {/*                    return Promise.reject(new Error('At least 1 exercise'));*/}
+                {/*                }*/}
+                {/*            },*/}
+                {/*        },*/}
+                {/*    ]}*/}
+                {/*>*/}
+                {/*    {(fields, { add, remove }, { errors }) => (*/}
+                {/*        <>*/}
+                {/*            {fields.map((field, index) => (*/}
+                {/*                <Space key={field.key} style={{ display: 'flex' }} align="start">*/}
+                {/*                    <Form.Item*/}
+                {/*                        //{...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}*/}
+                {/*                        //required={false}*/}
+                {/*                    >*/}
+                {/*                        <Form.Item*/}
+                {/*                            {...field}*/}
+                {/*                            validateTrigger={['onChange', 'onBlur']}*/}
+                {/*                            noStyle*/}
+                {/*                            {...formItemLayoutWithOutLabel}*/}
+                {/*                        >*/}
+                {/*                            <SearchInput*/}
+                {/*                                mode="multiple"*/}
+                {/*                                value={value}*/}
+                {/*                                placeholder="Select users"*/}
+                {/*                                fetchOptions={fetchUserList}*/}
+                {/*                                onChange={(newValue) => {*/}
+                {/*                                    setValue(newValue as UserValue);*/}
+                {/*                                }}*/}
+                {/*                                style={{ width: '100%' }}*/}
+                {/*                            />*/}
+                {/*                        </Form.Item>*/}
+                {/*                    </Form.Item>*/}
+                {/*                    <Form.Item*/}
+                {/*                        {...field}*/}
+                {/*                        name={[field.name, 'sets']}*/}
+                {/*                        rules={[{ required: true, message: 'Please enter sets' }]}*/}
+                {/*                    >*/}
+                {/*                        <InputNumber min={1} placeholder="Sets" />*/}
+                {/*                    </Form.Item>*/}
+                {/*                    <Form.Item*/}
+                {/*                        {...field}*/}
+                {/*                        name={[field.name, 'reps']}*/}
+                {/*                        rules={[{ required: true, message: 'Please enter reps' }]}*/}
+                {/*                    >*/}
+                {/*                        <InputNumber min={1} placeholder="Reps" />*/}
+                {/*                    </Form.Item>*/}
+                {/*                    <Form.Item*/}
+                {/*                        {...field}*/}
+                {/*                        name={[field.name, 'weight']}*/}
+                {/*                        rules={[{ required: true, message: 'Please enter weight' }]}*/}
+                {/*                    >*/}
+                {/*                        <InputNumber min={0} placeholder="Weight" />*/}
+                {/*                    </Form.Item>*/}
+                {/*                    <Form.Item*/}
+                {/*                        {...field}*/}
+                {/*                        name={[field.name, 'rest']}*/}
+                {/*                        rules={[{ required: true, message: 'Please enter rest' }]}*/}
+                {/*                    >*/}
+                {/*                        <InputNumber min={0} placeholder="Rest (secs)" />*/}
+                {/*                    </Form.Item>*/}
+                {/*                    <MinusCircleOutlined*/}
+                {/*                        className="dynamic-delete-button"*/}
+                {/*                        onClick={() => remove(field.name)}*/}
+                {/*                    />*/}
+                {/*                </Space>*/}
+                {/*            ))}*/}
+                {/*            <Form.Item {...formItemLayoutWithOutLabel}>*/}
+                {/*                <Button*/}
+                {/*                    type="dashed"*/}
+                {/*                    onClick={() => add()}*/}
+                {/*                    style={{ width: '60%' }}*/}
+                {/*                    icon={<PlusOutlined />}*/}
+                {/*                >*/}
+                {/*                    Add Exercise*/}
+                {/*                </Button>*/}
+                {/*                <Form.ErrorList errors={errors} />*/}
+                {/*            </Form.Item>*/}
+                {/*        </>*/}
+                {/*    )}*/}
+                {/*</Form.List>*/}
             </Form>
         </Modal>
     );

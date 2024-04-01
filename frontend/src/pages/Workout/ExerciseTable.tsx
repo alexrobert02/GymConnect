@@ -69,8 +69,8 @@ const Row = ({ children, ...props }: RowProps) => {
 
 interface ExerciseTableProps {
     exerciseData: ExerciseDataType[];
+    setExerciseData: (exerciseData: ExerciseDataType[]) => void;
     onExerciseClick: (record: ExerciseDataType) => void;
-    onDelete: (key: React.Key) => void;
     onDragEnd: (event: DragEndEvent) => void;
     title: string;
     onDeleteTable: () => void; // Function to delete the table
@@ -78,8 +78,8 @@ interface ExerciseTableProps {
 
 const ExerciseTable: React.FC<ExerciseTableProps> = ({
                                                          exerciseData,
+                                                         setExerciseData,
                                                          onExerciseClick,
-                                                         onDelete,
                                                          onDragEnd,
                                                          title,
                                                          onDeleteTable, // Added onDeleteTable prop
@@ -98,6 +98,11 @@ const ExerciseTable: React.FC<ExerciseTableProps> = ({
             }
         })
     }
+
+    const onDelete = (key: React.Key) => {
+        const newData = exerciseData.filter((item) => item.key !== key);
+        setExerciseData(newData);
+    };
 
     const columns: ColumnsType<ExerciseDataType> = [
         {

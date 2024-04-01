@@ -62,8 +62,8 @@ const WorkoutPage = () => {
             {showTable1 && (
                 <ExerciseTable
                     exerciseData={exerciseData1}
+                    setExerciseData={setExerciseData1}
                     onExerciseClick={handleExerciseClick}
-                    onDelete={(key) => handleDeleteTable(1)}
                     onDragEnd={(event) => onDragEnd(event, 1)}
                     title="Monday"
                     onDeleteTable={() => handleDeleteTable(1)}
@@ -72,8 +72,8 @@ const WorkoutPage = () => {
             {showTable2 && (
                 <ExerciseTable
                     exerciseData={exerciseData2}
+                    setExerciseData={setExerciseData2}
                     onExerciseClick={handleExerciseClick}
-                    onDelete={(key) => handleDeleteTable(2)}
                     onDragEnd={(event) => onDragEnd(event, 2)}
                     title="Tuesday"
                     onDeleteTable={() => handleDeleteTable(2)}
