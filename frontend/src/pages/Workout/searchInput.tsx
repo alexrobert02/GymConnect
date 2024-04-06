@@ -17,7 +17,8 @@ function SearchInput<
     const fetchRef = useRef(0);
     const [value, setValue] = useState<string>();
 
-    const handleChange = (newValue: string) => {
+    const handleChange = (newValue: any) => {
+        console.log("Handle change:", newValue);
         setValue(newValue);
     };
 

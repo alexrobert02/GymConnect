@@ -1,6 +1,6 @@
-import React from 'react';
-import { Popconfirm, Table, Typography, Button, Modal } from 'antd';
-import { MenuOutlined, DeleteOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Popconfirm, Table, Typography, Button, Modal, Form, Input, InputNumber } from 'antd';
+import { MenuOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { DragEndEvent } from '@dnd-kit/core';
 import { DndContext } from '@dnd-kit/core';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
@@ -12,10 +12,11 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { ColumnsType } from 'antd/es/table';
+import ExerciseForm from "./ExerciseForm";
 
 export interface ExerciseDataType {
     key: string | number;
-    exercise: string;
+    name: string;
     imageUrl: string;
     sets: number;
     reps: number[];
@@ -84,6 +85,8 @@ const ExerciseTable: React.FC<ExerciseTableProps> = ({
                                                          title,
                                                          onDeleteTable, // Added onDeleteTable prop
                                                      }) => {
+    const [editingExercise, setEditingExercise] = useState<ExerciseDataType | null>(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const showDeleteConfirm = () => {
         Modal.confirm({
@@ -104,16 +107,38 @@ const ExerciseTable: React.FC<ExerciseTableProps> = ({
         setExerciseData(newData);
     };
 
+    const editExercise = (key: React.Key) => {
+        const exerciseToEdit = exerciseData.find(item => item.key === key);
+        if (exerciseToEdit) {
+            setEditingExercise(exerciseToEdit);
+            setIsModalVisible(true);
+        }
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+        setEditingExercise(null);
+    };
+
+    const handleEdit = (editedExercise: ExerciseDataType) => {
+        const updatedData = exerciseData.map(item =>
+            item.key === editedExercise.key ? editedExercise : item
+        );
+        setExerciseData(updatedData);
+        setIsModalVisible(false);
+        setEditingExercise(null);
+    };
+
     const columns: ColumnsType<ExerciseDataType> = [
         {
             key: 'sort'
         },
         {
             title: 'Exercise',
-            dataIndex: 'exercise',
-            key: 'exercise',
-            render: (text, record) => (
-                <a onClick={() => onExerciseClick(record)}>{text}</a>
+            dataIndex: 'name',
+            key: 'name',
+            render: (name, record) => (
+                <a onClick={() => onExerciseClick(record)}>{name}</a>
             )
         },
         {
@@ -141,16 +166,23 @@ const ExerciseTable: React.FC<ExerciseTableProps> = ({
             title: 'Action',
             dataIndex: 'Action',
             render: (_, record: { key: React.Key }) =>
-                exerciseData.length >= 1 ? (
-                    <Popconfirm
-                        title="Sure to delete?"
-                        onConfirm={() => onDelete(record.key)}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <DeleteOutlined style={{fontSize: '19px'}}/>
-                    </Popconfirm>
-                ) : null,
+                exerciseData.length >= 1 ?
+                    (
+                        <>
+                            <EditOutlined
+                                style={{ fontSize: '19px' }}
+                                onClick={() => editExercise(record.key)}
+                            />
+                            <Popconfirm
+                                title="Sure to delete?"
+                                onConfirm={() => onDelete(record.key)}
+                                okText="Yes"
+                                cancelText="No"
+                            >
+                                <DeleteOutlined style={{fontSize: '19px', marginRight: '8px'}}/>
+                            </Popconfirm>
+                        </>
+                    ) : null,
         },
     ];
 
@@ -184,6 +216,17 @@ const ExerciseTable: React.FC<ExerciseTableProps> = ({
                     )}
                 />
             </SortableContext>
+            <Modal
+                title="Edit Exercise"
+                open={isModalVisible}
+                onCancel={handleCancel}
+                footer={null}
+            >
+                <ExerciseForm
+                    exercise={editingExercise}
+                    onFinish={handleEdit}
+                />
+            </Modal>
         </DndContext>
     );
 };

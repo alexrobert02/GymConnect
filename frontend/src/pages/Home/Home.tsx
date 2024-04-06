@@ -13,7 +13,7 @@ const HomePage = () => {
         const fetchData = async () => {
             try {
                 // Fetch data from the ExerciseDB API using your custom setup
-                const response = await exerciseDbApi.get('/exercises/bodyPart/back', {
+                const response = await exerciseDbApi.get('/exercises/name/press', {
                     params: { limit: '10' }
                 });
                 console.log("Exercise Data:", response.data);

@@ -8,13 +8,13 @@ import { arrayMove } from '@dnd-kit/sortable';
 
 const WorkoutPage = () => {
     const [exerciseData1, setExerciseData1] = useState<ExerciseDataType[]>([
-        { key: 1, exercise: 'Push-ups', imageUrl: 'https://v2.exercisedb.io/image/-B1YmLFwJItw3d', sets: 3, reps: [10, 8, 6], weights: 10, rest: 60 },
-        { key: 2, exercise: 'Squats', imageUrl: 'https://static.strengthlevel.com/images/exercises/bench-press/bench-press-800.jpg', sets: 3, reps: [10, 8, 6], weights: 10, rest: 60 },
+        { key: 1, name: 'Archer pull up', imageUrl: 'https://v2.exercisedb.io/image/9lGNciInUjyYXF', sets: 3, reps: [10, 8, 6], weights: 10, rest: 60 },
+        { key: 2, name: 'Squats', imageUrl: 'https://static.strengthlevel.com/images/exercises/bench-press/bench-press-800.jpg', sets: 3, reps: [10, 8, 6], weights: 10, rest: 50 },
     ]);
 
     const [exerciseData2, setExerciseData2] = useState<ExerciseDataType[]>([
-        { key: 3, exercise: 'Plank', imageUrl: 'https://static.strengthlevel.com/images/exercises/bench-press/bench-press-800.jpg', sets: 3, reps: [10, 8, 6], weights: 10, rest: 60 },
-        { key: 4, exercise: 'Burpees', imageUrl: 'https://static.strengthlevel.com/images/exercises/bench-press/bench-press-800.jpg', sets: 3, reps: [10, 8, 6], weights: 10, rest: 60 }
+        { key: 3, name: 'Plank', imageUrl: 'https://static.strengthlevel.com/images/exercises/bench-press/bench-press-800.jpg', sets: 3, reps: [10, 8, 6], weights: 10, rest: 60 },
+        { key: 4, name: 'Burpees', imageUrl: 'https://static.strengthlevel.com/images/exercises/bench-press/bench-press-800.jpg', sets: 3, reps: [10, 8, 6], weights: 10, rest: 60 }
     ]);
 
     const [visible, setVisible] = useState(false);
@@ -83,11 +83,11 @@ const WorkoutPage = () => {
                 open={visible}
                 onCancel={handleCloseModal}
                 footer={null}
-                title={currentExercise ? currentExercise.exercise : ''}
+                title={currentExercise ? currentExercise.name : ''}
                 width={'30%'}
             >
                 {currentExercise && (
-                    <img src={currentExercise.imageUrl} alt={currentExercise.exercise} style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
+                    <img src={currentExercise.imageUrl} alt={currentExercise.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
                 )}
             </Modal>
             <NewTableForm

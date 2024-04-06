@@ -53,6 +53,9 @@ public class SecurityConfiguration {
                 .requestMatchers(PUT, "/api/v1/admin/**").hasAuthority(ADMIN_UPDATE.name())
                 .requestMatchers(DELETE, "/api/v1/admin/**").hasAuthority(ADMIN_DELETE.name())
 
+                .requestMatchers(GET, "/api/v1/exercises/**").permitAll()
+                //.requestMatchers(GET, "/api/v1/exercises/name/**").permitAll()
+
                 .anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement -> sessionManagement
