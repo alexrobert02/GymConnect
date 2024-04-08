@@ -3,12 +3,12 @@
 import React from 'react';
 import './ExerciseCard.scss'
 
-const ExerciseCard = ({ exercise }: { exercise: { id: number, title: string, imageUrl: string, sets: number, reps: number[], weight: number, rest: number } }) => {
+const ExerciseCard = ({ exercise }: { exercise: { id: number, title: string, gifUrl: string, sets: number, reps: number[], weight: number, rest: number } }) => {
     return (
         <div className="exercise-card">
             <h3>{exercise.title}</h3>
             {/*<div className="image-container">*/}
-            {/*    <img src={exercise.imageUrl} alt={exercise.title} className="exercise-image" />*/}
+            {/*    <img src={exercise.gifUrl} alt={exercise.title} className="exercise-image" />*/}
             {/*</div>*/}
             <div className="exercise-details">
                 <p><strong>Sets:</strong> {exercise.sets}</p>

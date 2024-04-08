@@ -18,7 +18,7 @@ public class ExercisesController {
         List<ExerciseDTO> result = exercisesService.getAllExercises();
         if (result != null) {
             return ResponseEntity.ok(result);
-        } else {
+        } else { 
             // Handle other types of results or unexpected cases
             return ResponseEntity.badRequest().build();
         }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Popconfirm, Table, Typography, Button, Modal, Form, Input, InputNumber } from 'antd';
+import { Popconfirm, Table, Typography, Button, Modal } from 'antd';
 import { MenuOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { DragEndEvent } from '@dnd-kit/core';
 import { DndContext } from '@dnd-kit/core';
@@ -17,7 +17,7 @@ import ExerciseForm from "./ExerciseForm";
 export interface ExerciseDataType {
     key: string | number;
     name: string;
-    imageUrl: string;
+    gifUrl: string;
     sets: number;
     reps: number[];
     weights: number;
@@ -87,6 +87,8 @@ const ExerciseTable: React.FC<ExerciseTableProps> = ({
                                                      }) => {
     const [editingExercise, setEditingExercise] = useState<ExerciseDataType | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+
+    //console.log("exercise data:", exerciseData)
 
     const showDeleteConfirm = () => {
         Modal.confirm({

@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import { Form, Input, InputNumber, Button } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Form, InputNumber, Button, Select, Spin } from 'antd';
+import debounce from 'lodash/debounce';
 import { ExerciseDataType } from './ExerciseTable';
-import SearchInput, { SearchInputProps } from './searchInput'; // Import the SearchInput component
-import api from '../../services/api'
+import api from '../../services/api';
+
+const { Option } = Select;
 
 interface ExerciseFormProps {
     exercise: ExerciseDataType | null;
@@ -12,65 +14,74 @@ interface ExerciseFormProps {
 interface ExerciseValue {
     label: string;
     value: string;
-}
-
-async function fetchUserList(exerciseName: string): Promise<ExerciseValue[]> {
-    console.log('fetching exercise', exerciseName);
-    fetch('https://randomuser.me/api/?results=5')
-        .then((response) => response.json())
-        .then((body) => console.log(body));
-
-    return fetch('https://randomuser.me/api/?results=5')
-        .then((response) => response.json())
-        .then((body) =>
-            body.results.map(
-                (user: { name: { first: string; last: string }; login: { username: string } }) => ({
-                    label: `${user.name.first} ${user.name.last}`,
-                    value: user.login.username,
-                }),
-            ),
-
-    // return api.get(`http://localhost:8082/api/v1/exercises/name/${exerciseName}`)
-    //     .then((response) =>
-    //         response.data.map(
-    //             (exercise: { name: string }) => ({
-    //                 label: exercise.name,
-    //                 value: exercise.name,
-    //             }),
-    //         ),
-
-        );
+    gifUrl: string
 }
 
 const ExerciseForm: React.FC<ExerciseFormProps> = ({ exercise, onFinish }) => {
     const [form] = Form.useForm();
+    const [fetching, setFetching] = useState(false);
+    const [options, setOptions] = useState<ExerciseValue[]>([]);
 
-    // useEffect(() => {
-    //     if (exercise) {
-    //         form.setFieldsValue({ exercise: exercise.name }); // Set initial value for the form
-    //     }
-    // }, [exercise, form]);
 
-    console.log("Exercise name:", exercise?.name)
-    console.log("The prop exercise:", exercise)
+    useEffect(() => {
+        form.setFieldsValue({ name: exercise?.name }); // Set initial value for the form
+    }, [exercise, form]);
+
+    const fetchUserList = debounce(async (exerciseName: string) => {
+        setFetching(true);
+        try {
+            const response = await api.get(`http://localhost:8082/api/v1/exercises/name/${exerciseName}`);
+            const data = response.data;
+            const exerciseValues: ExerciseValue[] = data.map((exercise: { name: string , gifUrl: string }) => ({
+                label: exercise.name,
+                value: exercise.name,
+                gifUrl: exercise.gifUrl
+            }));
+            setOptions(exerciseValues);
+        } catch (error) {
+            console.error('Error fetching exercises:', error);
+            setOptions([]);
+        } finally {
+            setFetching(false);
+        }
+    }, 800);
 
     const handleFinish = () => {
         form.validateFields().then(values => {
-            const editedExercise: ExerciseDataType = {
-                ...(exercise as ExerciseDataType),
-                ...values,
-            };
-            onFinish(editedExercise);
-            console.log("EditedExercise:", editedExercise)
-            console.log(values)
+            const selectedExercise = options.find(option => option.value === values.name);
+            if (selectedExercise) {
+                submitForm(selectedExercise.gifUrl)
+            }
         });
     };
 
+    const submitForm = (gifUrl : string) => {
+        const editedExercise: ExerciseDataType = {
+            ...(exercise as ExerciseDataType),
+            ...form.getFieldsValue(),
+            gifUrl: gifUrl
+        };
+        onFinish(editedExercise);
+        console.log("edited exercise:", editedExercise);
+    }
 
     return (
         <Form form={form} initialValues={exercise || {}} onFinish={handleFinish} layout="vertical">
             <Form.Item label="Exercise" name="name" rules={[{ required: true }]}>
-                <SearchInput fetchOptions={fetchUserList} placeholder="Search exercise" />
+                <Select
+                    showSearch
+                    placeholder="Search exercise"
+                    filterOption={false}
+                    onSearch={fetchUserList}
+                    notFoundContent={fetching ? <Spin size="small" /> : null}
+                    loading={fetching}
+                >
+                    {options.map(option => (
+                        <Option key={option.value} value={option.value}>
+                            {option.label}
+                        </Option>
+                    ))}
+                </Select>
             </Form.Item>
             <Form.Item label="Sets" name="sets" rules={[{ type: 'number', min: 1, required: true }]}>
                 <InputNumber />
