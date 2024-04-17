@@ -5,7 +5,6 @@ import com.gymconnect.authserver.config.JwtService;
 import com.gymconnect.authserver.token.Token;
 import com.gymconnect.authserver.token.TokenRepository;
 import com.gymconnect.authserver.token.TokenType;
-import com.gymconnect.authserver.user.Role;
 import com.gymconnect.authserver.user.User;
 import com.gymconnect.authserver.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

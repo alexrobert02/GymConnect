@@ -53,10 +53,16 @@ public class SecurityConfiguration {
                 .requestMatchers(PUT, "/api/v1/admin/**").hasAuthority(ADMIN_UPDATE.name())
                 .requestMatchers(DELETE, "/api/v1/admin/**").hasAuthority(ADMIN_DELETE.name())
 
-                .requestMatchers(GET, "/api/v1/exercises/**").permitAll()
-                //.requestMatchers(GET, "/api/v1/exercises/name/**").permitAll()
+                .requestMatchers("/api/v1/exercises/**").permitAll()
+                .requestMatchers("/api/v1/workout/day/**").permitAll()
+                .requestMatchers("/api/v1/workout/**").permitAll()
+                .requestMatchers("/api/v1/userExercise/**").permitAll()
 
-                .anyRequest().authenticated()
+                .requestMatchers("/api/v1/workout/exercise/**").permitAll()
+
+                .requestMatchers("/employees/**").permitAll()
+
+                //.anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement -> sessionManagement
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
