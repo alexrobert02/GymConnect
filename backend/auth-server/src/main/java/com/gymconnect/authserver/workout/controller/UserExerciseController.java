@@ -23,6 +23,11 @@ public class UserExerciseController {
 
     @PostMapping
     public ResponseEntity<?> createUserExercise(@RequestBody UserExerciseDto userExerciseDto) {
+        if (userExerciseDto.getReps().size() != userExerciseDto.getSets()) {
+            String errorMessage = "Size of sets must match the number of reps provided.";
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        }
+
         Optional<Workout> optionalWorkout = workoutService.findById(userExerciseDto.getWorkoutId());
         if (optionalWorkout.isPresent()) {
             Workout workout = optionalWorkout.get();
@@ -36,11 +41,30 @@ public class UserExerciseController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUserExercise(@PathVariable UUID id, @RequestBody UserExerciseDto userExerciseDto) {
+        UserExercise userExercise = userExerciseService.findById(id);
+        if (userExercise != null) {
+            // Update exercise details
+            userExercise.setSets(userExerciseDto.getSets());
+            userExercise.setReps(userExerciseDto.getReps());
+            userExercise.setWeights(userExerciseDto.getWeights());
+            userExercise.setRest(userExerciseDto.getRest());
+
+            // Update exercise in database
+            userExerciseService.updateUserExercise(userExercise);
+            return new ResponseEntity<>(userExercise, HttpStatus.OK);
+        } else {
+            String errorMessage = "User exercise with id " + id + " not found.";
+            return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 
     @GetMapping("/{id}")
     public ResponseEntity<UserExercise> getUserExerciseById(@PathVariable UUID id) {
-        UserExercise userExercise = userExerciseService.getUserExerciseById(id);
+        UserExercise userExercise = userExerciseService.findById(id);
         if (userExercise == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

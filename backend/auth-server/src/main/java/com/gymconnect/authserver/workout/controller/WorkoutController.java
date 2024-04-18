@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -46,12 +47,22 @@ public class WorkoutController {
 //        return new ResponseEntity<>(workouts, HttpStatus.OK);
 //    }
 
-    @GetMapping("/user/{user-id}")
-    public ResponseEntity<List<Workout>> getAllWorkoutsByUserId(@PathVariable("user-id") UUID userId) {
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Workout>> getAllWorkoutsByUserId(@PathVariable("userId") UUID userId) {
         List<Workout> workouts = workoutService.findByUserId(userId);
         return new ResponseEntity<>(workouts, HttpStatus.OK);
 
     }
 
-    // Add more endpoints as needed
+    @DeleteMapping("/{workoutId}")
+    public ResponseEntity<?> deleteWorkout(@PathVariable("workoutId") UUID id) {
+        Optional<Workout> existingWorkout = workoutService.findById(id);
+        if (existingWorkout.isEmpty()) {
+            String errorMessage = "Workout not found.";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+        }
+
+        workoutService.deleteWorkout(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout deleted successfully");
+    }
 }

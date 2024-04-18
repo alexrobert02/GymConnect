@@ -6,6 +6,7 @@ import com.gymconnect.authserver.workout.repository.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,7 +20,11 @@ public class UserExerciseService {
         this.workoutRepository = workoutRepository;
     }
 
-    public UserExercise getUserExerciseById(UUID id) {
+    public UserExercise findById(UUID id) {
         return userExerciseRepository.findById(id).orElse(null);
+    }
+
+    public void updateUserExercise(UserExercise userExercise) {
+        userExerciseRepository.save(userExercise);
     }
 }

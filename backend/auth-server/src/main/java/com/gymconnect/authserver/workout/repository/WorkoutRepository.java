@@ -12,4 +12,5 @@ import java.util.UUID;
 public interface WorkoutRepository extends JpaRepository<Workout, UUID> {
     List<Workout> findByUserIdAndDay(UUID userId, Day day);
     List<Workout> findWorkoutsByUserId(UUID userId);
+    void deleteById(UUID id);
 }

@@ -40,4 +40,7 @@ public class WorkoutService {
         return workoutRepository.findWorkoutsByUserId(userId);
     }
 
+    public void deleteWorkout(UUID id) {
+        workoutRepository.deleteById(id);
+    }
 }

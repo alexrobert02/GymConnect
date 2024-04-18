@@ -18,7 +18,7 @@ public class UserController {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            UserDTO userDTO = new UserDTO(user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole().toString());
+            UserDTO userDTO = new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole().toString());
             return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.notFound().build();
