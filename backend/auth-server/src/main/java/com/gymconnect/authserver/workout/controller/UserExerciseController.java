@@ -1,5 +1,8 @@
 package com.gymconnect.authserver.workout.controller;
 
+import com.gymconnect.authserver.exercises.ExerciseDTO;
+import com.gymconnect.authserver.exercises.ExercisesService;
+import com.gymconnect.authserver.user.User;
 import com.gymconnect.authserver.workout.dto.UserExerciseDto;
 import com.gymconnect.authserver.workout.model.UserExercise;
 import com.gymconnect.authserver.workout.model.Workout;
@@ -46,6 +49,7 @@ public class UserExerciseController {
         UserExercise userExercise = userExerciseService.findById(id);
         if (userExercise != null) {
             // Update exercise details
+            userExercise.setExerciseId(userExerciseDto.getExerciseId());
             userExercise.setSets(userExerciseDto.getSets());
             userExercise.setReps(userExerciseDto.getReps());
             userExercise.setWeights(userExerciseDto.getWeights());
@@ -60,8 +64,6 @@ public class UserExerciseController {
         }
     }
 
-
-
     @GetMapping("/{id}")
     public ResponseEntity<UserExercise> getUserExerciseById(@PathVariable UUID id) {
         UserExercise userExercise = userExerciseService.findById(id);
@@ -69,5 +71,17 @@ public class UserExerciseController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(userExercise, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUserExercise(@PathVariable("id") UUID id) {
+        UserExercise existingUserExercise = userExerciseService.findById(id);
+        if (existingUserExercise == null) {
+            String errorMessage = "UserExercise not found.";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+        }
+
+        userExerciseService.deleteUserExercise(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout deleted successfully");
     }
 }

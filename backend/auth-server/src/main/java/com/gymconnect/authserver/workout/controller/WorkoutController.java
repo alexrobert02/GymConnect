@@ -1,6 +1,7 @@
 package com.gymconnect.authserver.workout.controller;
 
 import com.gymconnect.authserver.workout.dto.WorkoutDto;
+import com.gymconnect.authserver.workout.dto.WorkoutFromApi;
 import com.gymconnect.authserver.workout.model.Day;
 import com.gymconnect.authserver.workout.model.Workout;
 import com.gymconnect.authserver.workout.service.WorkoutService;
@@ -48,10 +49,15 @@ public class WorkoutController {
 //    }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Workout>> getAllWorkoutsByUserId(@PathVariable("userId") UUID userId) {
-        List<Workout> workouts = workoutService.findByUserId(userId);
+    public ResponseEntity<List<WorkoutFromApi>> getAllWorkoutsByUserId(@PathVariable("userId") UUID userId) {
+        List<WorkoutFromApi> workouts = workoutService.findByUserId(userId);
         return new ResponseEntity<>(workouts, HttpStatus.OK);
+    }
 
+    @GetMapping("/remaining-days/user/{userId}")
+    public ResponseEntity<List<Day>> getRemainingWorkoutDaysByUserId(@PathVariable("userId") UUID userId) {
+        List<Day> remainingDays = workoutService.findRemainingWorkoutDaysByUserId(userId);
+        return new ResponseEntity<>(remainingDays, HttpStatus.OK);
     }
 
     @DeleteMapping("/{workoutId}")

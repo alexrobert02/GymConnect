@@ -33,4 +33,14 @@ public class ExercisesController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ExerciseDTO> getExerciseById(@PathVariable String id) {
+        ExerciseDTO exercise = exercisesService.getExerciseById(id);
+        if (exercise != null) {
+            return ResponseEntity.ok(exercise);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

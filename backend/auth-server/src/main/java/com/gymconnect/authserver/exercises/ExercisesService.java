@@ -14,7 +14,7 @@ import java.util.List;
 public class ExercisesService {
 
     private static final String url = "https://exercisedb.p.rapidapi.com/exercises";
-    private static final String xRapidApiKey = "13bd31c4e7msh37b38bf58fde695p14e818jsn92c51b03dfba";
+    private static final String xRapidApiKey = "b43f830148mshddfe7f9d9c9b95ap132d69jsnd33ecbfb6e38";
     private static final String xRapidApiHost = "exercisedb.p.rapidapi.com";
 
     private final RestTemplate restTemplate;
@@ -65,6 +65,34 @@ public class ExercisesService {
                     new ParameterizedTypeReference<>() {
                     },
                     name
+            );
+            return response.getBody();
+
+        } catch (Exception e) {
+            log.error("Something went wrong while getting value from RapidAPI", e);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Exception while calling endpoint of RapidAPI for exercise-db",
+                    e
+            );
+        }
+    }
+
+    public ExerciseDTO getExerciseById(String id) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-RapidAPI-Key", xRapidApiKey);
+            headers.set("X-RapidAPI-Host", xRapidApiHost);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+            ResponseEntity<ExerciseDTO> response = restTemplate.exchange(
+                    url + "/exercise/{id}",
+                    HttpMethod.GET,
+                    requestEntity,
+                    new ParameterizedTypeReference<>() {
+                    },
+                    id
             );
             return response.getBody();
 

@@ -18,27 +18,27 @@ public class AuthServerApplication {
 		SpringApplication.run(AuthServerApplication.class, args);
 	}
 
-	@Bean
-	public CommandLineRunner commandLineRunner(
-		AuthenticationService service
-	) {
-		return args -> {
-			var admin = RegisterRequest.builder()
-				.firstName("Admin")
-				.lastName("Admin")
-				.email("admin@mail.com")
-				.password("password")
-				.role(ADMIN)
-				.build();
-			var user = RegisterRequest.builder()
-				.firstName("Alex")
-				.lastName("Zaharia")
-				.email("alex@gmail.com")
-				.password("1234")
-				.role(USER)
-				.build();
-			service.register(user);
-			System.out.println("Admin token: " + service.register(admin).getAccessToken());
-		};
-	}
+//	@Bean
+//	public CommandLineRunner commandLineRunner(
+//		AuthenticationService service
+//	) {
+//		return args -> {
+//			var admin = RegisterRequest.builder()
+//				.firstName("Admin")
+//				.lastName("Admin")
+//				.email("admin@mail.com")
+//				.password("password")
+//				.role(ADMIN)
+//				.build();
+//			var user = RegisterRequest.builder()
+//				.firstName("Alex")
+//				.lastName("Zaharia")
+//				.email("alex@gmail.com")
+//				.password("1234")
+//				.role(USER)
+//				.build();
+//			service.register(user);
+//			System.out.println("Admin token: " + service.register(admin).getAccessToken());
+//		};
+//	}
 }

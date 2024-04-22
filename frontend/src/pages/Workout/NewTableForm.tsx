@@ -1,7 +1,30 @@
-import React, { useState } from 'react';
-import { Modal, Form, Input, Button, InputNumber, Space } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import SearchInput from "./searchInput";
+import React, {useEffect, useState} from 'react';
+import {Modal, Form, Input, Button, Select} from 'antd';
+import axios from "axios";
+import {jwtDecode} from "jwt-decode";
+import { securedInstance } from "../../services/api";
+
+const axiosInstance = axios.create({
+    baseURL: 'http://localhost:8082/api/v1',
+    headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+});
+
+const extractToken = () => {
+    try {
+        let token: string | null = localStorage.getItem('token');
+        if (!token) {
+            console.error('No token found in local storage');
+            return null;
+        }
+        return token;
+    } catch (err) {
+        console.error('Failed to decode token', err);
+        return null;
+    }
+};
 
 const formItemLayout = {
     labelCol: {
@@ -14,49 +37,98 @@ const formItemLayout = {
     },
 };
 
-const formItemLayoutWithOutLabel = {
-    wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 19, offset: 3 },
-    },
-};
-
-interface UserValue {
+interface OptionValue {
     label: string;
     value: string;
-}
-
-async function fetchUserList(username: string): Promise<UserValue[]> {
-    console.log('fetching user', username);
-
-    return fetch('https://randomuser.me/api/?results=5')
-        .then((response) => response.json())
-        .then((body) =>
-            body.results.map(
-                (user: { name: { first: string; last: string }; login: { username: string } }) => ({
-                    label: `${user.name.first} ${user.name.last}`,
-                    value: user.login.username,
-                }),
-            ),
-        );
 }
 
 interface NewTableFormProps {
     isModalOpen: boolean;
     setIsModalOpen: (isModalOpen: boolean) => void;
+    isModified: boolean;
+    setIsModified: (isModified: boolean) => void;
 }
 
-const NewTableForm: React.FC<NewTableFormProps> = ({ isModalOpen, setIsModalOpen }) => {
+const NewTableForm: React.FC<NewTableFormProps> = ({ isModalOpen, setIsModalOpen, isModified, setIsModified }) => {
     const [form] = Form.useForm();
-    const [value, setValue] = useState<UserValue>()
+    const [options, setOptions] = useState<OptionValue[]>([]);
+    const [userId, setUserId] = useState<string>('')
+
+    const fetchData = () => {
+        const token = extractToken();
+        if (!token) {
+            console.error('No token found in local storage');
+            return;
+        }
+        const decodedToken: any = jwtDecode(token);
+        const email = decodedToken.sub;
+        console.log('email:', email);
+        if (email) {
+            axiosInstance
+                .get(`/users/email/${email}`)
+                .then(response => {
+                    setUserId(response.data.id)
+                    return response.data.id;
+                })
+                .then(id => {
+                    axiosInstance
+                        .get(`http://localhost:8082/api/v1/workout/remaining-days/user/${id}`)
+                        .then(response => {
+                            console.log("Fetch successful");
+                            const data = response.data;
+                            const exerciseValues: OptionValue[] = data.map((day: string) => ({
+                                label: day,
+                                value: day,
+                            }));
+                            setOptions(exerciseValues);
+                            console.log(response.data);
+                        })
+                        .catch(error => {
+                            if (error.response && error.response.status === 404) {
+                                console.error('Error fetching data:', error)
+                                setOptions([]);
+                            } else {
+                                console.error('Error fetching data:', error);
+                                setOptions([]);
+                            }
+                        });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    setOptions([]);
+                });
+        }
+    }
+
+    useEffect(() => {
+        if (isModalOpen) {
+            fetchData();
+        }
+    }, [isModalOpen]);
 
     const handleOk = () => {
         form.validateFields().then((values) => {
             console.log('Received values:', values);
+            saveWorkoutDay(values.workoutDay)
             form.resetFields();
         });
+        setIsModified(!isModified);
         setIsModalOpen(false)
     };
+
+    const saveWorkoutDay = (day: string) => {
+        axiosInstance.post('/workout', {
+            userId: userId,
+            day: day
+        })
+        .then(response => {
+            console.log('Workout saved successfully:', response.data);
+            fetchData();
+        })
+        .catch(error => {
+            console.error('Error saving workout:', error);
+        });
+    }
 
     const handleCancel = () => {
         setIsModalOpen(false)
@@ -66,7 +138,7 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ isModalOpen, setIsModalOpen
         <Modal
             open={isModalOpen}
             onCancel={handleCancel}
-            title="Add New Table"
+            title="Add New Workout Day"
             footer={[
                 <Button key="cancel" onClick={handleCancel}>
                     Cancel
@@ -80,99 +152,13 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ isModalOpen, setIsModalOpen
         >
             <Form form={form} layout="horizontal">
                 <Form.Item
-                    name="tableName"
-                    label="Table Name"
-                    rules={[{ required: true, message: 'Please enter table name' }]}
+                    name="workoutDay"
+                    label="Workout Day"
+                    rules={[{ required: true, message: 'Please enter workout day' }]}
                     {...formItemLayout}
                 >
-                    <Input />
+                    <Select options={options.map(option => ({ value: option.value, label: option.label }))} />
                 </Form.Item>
-                {/*<Form.List*/}
-                {/*    name="exercises"*/}
-                {/*    rules={[*/}
-                {/*        {*/}
-                {/*            validator: async (_, exercises) => {*/}
-                {/*                if (!exercises || exercises.length < 1) {*/}
-                {/*                    return Promise.reject(new Error('At least 1 exercise'));*/}
-                {/*                }*/}
-                {/*            },*/}
-                {/*        },*/}
-                {/*    ]}*/}
-                {/*>*/}
-                {/*    {(fields, { add, remove }, { errors }) => (*/}
-                {/*        <>*/}
-                {/*            {fields.map((field, index) => (*/}
-                {/*                <Space key={field.key} style={{ display: 'flex' }} align="start">*/}
-                {/*                    <Form.Item*/}
-                {/*                        //{...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}*/}
-                {/*                        //required={false}*/}
-                {/*                    >*/}
-                {/*                        <Form.Item*/}
-                {/*                            {...field}*/}
-                {/*                            validateTrigger={['onChange', 'onBlur']}*/}
-                {/*                            noStyle*/}
-                {/*                            {...formItemLayoutWithOutLabel}*/}
-                {/*                        >*/}
-                {/*                            <SearchInput*/}
-                {/*                                mode="multiple"*/}
-                {/*                                value={value}*/}
-                {/*                                placeholder="Select users"*/}
-                {/*                                fetchOptions={fetchUserList}*/}
-                {/*                                onChange={(newValue) => {*/}
-                {/*                                    setValue(newValue as UserValue);*/}
-                {/*                                }}*/}
-                {/*                                style={{ width: '100%' }}*/}
-                {/*                            />*/}
-                {/*                        </Form.Item>*/}
-                {/*                    </Form.Item>*/}
-                {/*                    <Form.Item*/}
-                {/*                        {...field}*/}
-                {/*                        name={[field.name, 'sets']}*/}
-                {/*                        rules={[{ required: true, message: 'Please enter sets' }]}*/}
-                {/*                    >*/}
-                {/*                        <InputNumber min={1} placeholder="Sets" />*/}
-                {/*                    </Form.Item>*/}
-                {/*                    <Form.Item*/}
-                {/*                        {...field}*/}
-                {/*                        name={[field.name, 'reps']}*/}
-                {/*                        rules={[{ required: true, message: 'Please enter reps' }]}*/}
-                {/*                    >*/}
-                {/*                        <InputNumber min={1} placeholder="Reps" />*/}
-                {/*                    </Form.Item>*/}
-                {/*                    <Form.Item*/}
-                {/*                        {...field}*/}
-                {/*                        name={[field.name, 'weight']}*/}
-                {/*                        rules={[{ required: true, message: 'Please enter weight' }]}*/}
-                {/*                    >*/}
-                {/*                        <InputNumber min={0} placeholder="Weight" />*/}
-                {/*                    </Form.Item>*/}
-                {/*                    <Form.Item*/}
-                {/*                        {...field}*/}
-                {/*                        name={[field.name, 'rest']}*/}
-                {/*                        rules={[{ required: true, message: 'Please enter rest' }]}*/}
-                {/*                    >*/}
-                {/*                        <InputNumber min={0} placeholder="Rest (secs)" />*/}
-                {/*                    </Form.Item>*/}
-                {/*                    <MinusCircleOutlined*/}
-                {/*                        className="dynamic-delete-button"*/}
-                {/*                        onClick={() => remove(field.name)}*/}
-                {/*                    />*/}
-                {/*                </Space>*/}
-                {/*            ))}*/}
-                {/*            <Form.Item {...formItemLayoutWithOutLabel}>*/}
-                {/*                <Button*/}
-                {/*                    type="dashed"*/}
-                {/*                    onClick={() => add()}*/}
-                {/*                    style={{ width: '60%' }}*/}
-                {/*                    icon={<PlusOutlined />}*/}
-                {/*                >*/}
-                {/*                    Add Exercise*/}
-                {/*                </Button>*/}
-                {/*                <Form.ErrorList errors={errors} />*/}
-                {/*            </Form.Item>*/}
-                {/*        </>*/}
-                {/*    )}*/}
-                {/*</Form.List>*/}
             </Form>
         </Modal>
     );

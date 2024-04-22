@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Popconfirm, Table, Typography, Button, Modal } from 'antd';
-import { MenuOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { Popconfirm, Table, Typography, Button, Modal, Space } from 'antd';
+import { MenuOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { DragEndEvent } from '@dnd-kit/core';
 import { DndContext } from '@dnd-kit/core';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
@@ -11,137 +11,123 @@ import {
     useSortable,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { ColumnsType } from 'antd/es/table';
 import ExerciseForm from "./ExerciseForm";
+import exerciseDb from "../../services/exerciseDbApi";
+import { ColumnsType } from "antd/es/table";
+import { v4 } from "uuid";
+import axios from "axios";
+const { Title } = Typography;
+
+const axiosInstance = axios.create({
+    baseURL: 'http://localhost:8082/api/v1',
+    headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+});
+
+export interface ExerciseType {
+    bodyPart: string;
+    equipment: string;
+    gifUrl: string;
+    id: string;
+    name: string;
+    target: string;
+    secondaryMuscles: string[];
+    instructions: string[];
+}
 
 export interface ExerciseDataType {
     key: string | number;
-    name: string;
-    gifUrl: string;
+    id: string;
+    exercise: ExerciseType;
     sets: number;
     reps: number[];
     weights: number;
     rest: number;
 }
 
-interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
-    'data-row-key': string;
-}
-
-const Row = ({ children, ...props }: RowProps) => {
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        setActivatorNodeRef,
-        transform,
-        transition,
-        isDragging,
-    } = useSortable({
-        id: props['data-row-key'],
-    });
-
-    const style: React.CSSProperties = {
-        ...props.style,
-        transform: CSS.Transform.toString(transform && { ...transform, scaleY: 1 }),
-        transition,
-        ...(isDragging ? { position: 'relative', zIndex: 9999 } : {}),
-    };
-
-    return (
-        <tr {...props} ref={setNodeRef} style={style} {...attributes}>
-            {React.Children.map(children, (child) => {
-                if ((child as React.ReactElement).key === 'sort') {
-                    return React.cloneElement(child as React.ReactElement, {
-                        children: (
-                            <MenuOutlined
-                                ref={setActivatorNodeRef}
-                                style={{ touchAction: 'none', cursor: 'move' }}
-                                {...listeners}
-                            />
-                        ),
-                    });
-                }
-                return child;
-            })}
-        </tr>
-    );
-};
-
 interface ExerciseTableProps {
+    id: string
     exerciseData: ExerciseDataType[];
-    setExerciseData: (exerciseData: ExerciseDataType[]) => void;
-    onExerciseClick: (record: ExerciseDataType) => void;
-    onDragEnd: (event: DragEndEvent) => void;
     title: string;
-    onDeleteTable: () => void; // Function to delete the table
+    onDragEnd: (event: DragEndEvent, tableIndex: number) => void;
+    isModified: boolean;
+    setIsModified: (isModified: boolean) => void;
 }
 
-const ExerciseTable: React.FC<ExerciseTableProps> = ({
-                                                         exerciseData,
-                                                         setExerciseData,
-                                                         onExerciseClick,
-                                                         onDragEnd,
-                                                         title,
-                                                         onDeleteTable, // Added onDeleteTable prop
-                                                     }) => {
-    const [editingExercise, setEditingExercise] = useState<ExerciseDataType | null>(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ id, exerciseData, title, onDragEnd, isModified, setIsModified }) => {
+    const [modalVisible, setModalVisible] = useState(false);
+    const [formVisible, setFormVisible] = useState(false);
+    const [currentExercise, setCurrentExercise] = useState<ExerciseDataType | null>(null);
+    const [action, setAction] = useState<string>('');
+    const [formTitle, setFormTitle] = useState<string>('');
 
-    //console.log("exercise data:", exerciseData)
-
-    const showDeleteConfirm = () => {
-        Modal.confirm({
-            title: "Delete Table",
-            icon: <ExclamationCircleFilled />,
-            content: "Are you sure you want to delete this table?",
-            okText: 'Yes',
-            okType: 'danger',
-            cancelText: 'No',
-            onOk() {
-                onDeleteTable()
-            }
-        })
+    const handleImageClick = (exercise: ExerciseDataType) => {
+        setCurrentExercise(exercise);
+        console.log("current exercise:", exercise);
+        setModalVisible(true);
     }
 
-    const onDelete = (key: React.Key) => {
-        const newData = exerciseData.filter((item) => item.key !== key);
-        setExerciseData(newData);
+    const handleCloseModal = () => {
+        setModalVisible(false);
     };
 
-    const editExercise = (key: React.Key) => {
-        const exerciseToEdit = exerciseData.find(item => item.key === key);
-        if (exerciseToEdit) {
-            setEditingExercise(exerciseToEdit);
-            setIsModalVisible(true);
-        }
-    };
+    const openExerciseForm = (exercise: ExerciseDataType) => {
+        setCurrentExercise(exercise);
+        setAction("edit")
+        setFormVisible(true);
+    }
 
-    const handleCancel = () => {
-        setIsModalVisible(false);
-        setEditingExercise(null);
-    };
+    const onDeleteExercise = (id: string) => {
+        // Handle delete action here
+        axiosInstance.delete(`/userExercise/${id}`)
+            .then(response => {
+                console.log("Workout deleted successfully.", response);
+            })
+            .catch(error => {
+                console.error("Error deleting workout:", error);
+            });
+        setIsModified(!isModified);
+    }
 
-    const handleEdit = (editedExercise: ExerciseDataType) => {
-        const updatedData = exerciseData.map(item =>
-            item.key === editedExercise.key ? editedExercise : item
-        );
-        setExerciseData(updatedData);
-        setIsModalVisible(false);
-        setEditingExercise(null);
-    };
+    const onDeleteTable = () => {
+        axiosInstance.delete(`/workout/${id}`)
+            .then(response => {
+                console.log("Workout deleted successfully.", response);
+            })
+            .catch(error => {
+                console.error("Error deleting workout:", error);
+            });
+        setIsModified(!isModified);
+    }
+
+    const handleAdd = () => {
+        setCurrentExercise(null)
+        setFormVisible(true)
+        setAction("add")
+        setFormTitle("Add Exercise")
+    }
 
     const columns: ColumnsType<ExerciseDataType> = [
         {
-            key: 'sort'
-        },
-        {
             title: 'Exercise',
-            dataIndex: 'name',
-            key: 'name',
-            render: (name, record) => (
-                <a onClick={() => onExerciseClick(record)}>{name}</a>
-            )
+            dataIndex: 'exercise',
+            key: 'exercise',
+            render: (text, record) => (
+                <div>
+                    <span onClick={() => handleImageClick(record)}>
+                        <img src={record.exercise.gifUrl} alt={record.exercise.name} style={{
+                            width: '50px',
+                            height: '50px',
+                            objectFit: 'cover',
+                            borderRadius: '50%',
+                            cursor: 'pointer'
+                        }} />
+                    </span>
+                    <span style={{ marginLeft: '10px' }}>{record.exercise.name}</span>
+                </div>
+            ),
         },
         {
             title: 'Sets',
@@ -152,7 +138,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = ({
             title: 'Reps',
             dataIndex: 'reps',
             key: 'reps',
-            render: (reps: any[]) => reps.join(', '),
+            render: (reps: number[]) => <span>{reps.join(', ')}</span>,
         },
         {
             title: 'Weights',
@@ -166,71 +152,83 @@ const ExerciseTable: React.FC<ExerciseTableProps> = ({
         },
         {
             title: 'Action',
-            dataIndex: 'Action',
-            render: (_, record: { key: React.Key }) =>
-                exerciseData.length >= 1 ?
-                    (
-                        <>
-                            <EditOutlined
-                                style={{ fontSize: '19px' }}
-                                onClick={() => editExercise(record.key)}
-                            />
-                            <Popconfirm
-                                title="Sure to delete?"
-                                onConfirm={() => onDelete(record.key)}
-                                okText="Yes"
-                                cancelText="No"
-                            >
-                                <DeleteOutlined style={{fontSize: '19px', marginRight: '8px'}}/>
-                            </Popconfirm>
-                        </>
-                    ) : null,
+            key: 'action',
+            render: (text, record) => (
+                <div>
+                    <Button icon={<EditOutlined />} onClick={() => openExerciseForm(record)} />
+                    {/*<Popconfirm*/}
+                    {/*    title="Are you sure you want to delete this exercise?"*/}
+                    {/*    onConfirm={() => onDeleteExercise(record)}*/}
+                    {/*    okText="Yes"*/}
+                    {/*    cancelText="No"*/}
+                    {/*>*/}
+                        <Button icon={<DeleteOutlined />} onClick={() => onDeleteExercise(record.id)}/>
+                    {/*</Popconfirm>*/}
+                </div>
+            ),
         },
     ];
 
     return (
-        <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
-            <SortableContext
-                items={exerciseData.map((i) => i.key)}
-                strategy={verticalListSortingStrategy}
-            >
-                <Table
-                    components={{
-                        body: {
-                            row: Row,
-                        },
-                    }}
-                    rowKey="key"
-                    columns={columns}
-                    dataSource={exerciseData}
-                    pagination={false}
-                    title={() => (
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography.Title level={2} style={{ marginBottom: 0, textAlign: 'center' }}>
-                                {title}
-                            </Typography.Title>
-                            {exerciseData.length >= 1 && ( // Render the delete button conditionally
-                                <Button type="primary" danger onClick={showDeleteConfirm}>
-                                    Delete Table
+        <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Title level={4}>{title}</Title>
+                <Popconfirm
+                    title="Are you sure you want to delete this table?"
+                    onConfirm={onDeleteTable}
+                    okText="Yes"
+                    cancelText="No"
+                >
+                    <Button icon={<DeleteOutlined />} type="text" danger />
+                </Popconfirm>
+            </div>
+            <DndContext onDragEnd={(event) => onDragEnd(event, 0)}>
+                <SortableContext
+                    items={exerciseData.map((_, index) => index.toString())}
+                    strategy={verticalListSortingStrategy}
+                >
+                    <Table
+                        dataSource={exerciseData}
+                        columns={columns}
+                        rowKey={(record) => record.id}
+                        pagination={false}
+                        footer={() => (
+                            <Space>
+                                <Button type="default" icon={<PlusOutlined />} onClick={handleAdd}>
+                                    Add Exercise
                                 </Button>
-                            )}
-                        </div>
-                    )}
-                />
-            </SortableContext>
+                            </Space>
+                        )}
+                    />
+                </SortableContext>
+            </DndContext>
             <Modal
-                title="Edit Exercise"
-                open={isModalVisible}
-                onCancel={handleCancel}
+                open={modalVisible}
+                onCancel={handleCloseModal}
                 footer={null}
+                title={currentExercise ? currentExercise.exercise.name : ''}
+                width={'30%'}
             >
-                <ExerciseForm
-                    exercise={editingExercise}
-                    onFinish={handleEdit}
-                />
+                {currentExercise && (
+                    <img
+                        src={currentExercise.exercise.gifUrl}
+                        alt={currentExercise.exercise.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                )}
             </Modal>
-        </DndContext>
+            <ExerciseForm
+                workoutId={id}
+                title={formTitle}
+                isOpen={formVisible}
+                setIsOpen={setFormVisible}
+                action={action}
+                isModified={isModified}
+                setIsModified={setIsModified}
+                exercise={currentExercise}
+            />
+        </div>
     );
-};
+});
 
 export default ExerciseTable;

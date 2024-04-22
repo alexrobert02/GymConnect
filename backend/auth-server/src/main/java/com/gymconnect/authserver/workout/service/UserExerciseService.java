@@ -27,4 +27,8 @@ public class UserExerciseService {
     public void updateUserExercise(UserExercise userExercise) {
         userExerciseRepository.save(userExercise);
     }
+
+    public void deleteUserExercise(UUID id) {
+        userExerciseRepository.deleteById(id);
+    }
 }
