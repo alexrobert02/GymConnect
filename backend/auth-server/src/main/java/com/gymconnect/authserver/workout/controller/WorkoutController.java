@@ -1,8 +1,10 @@
 package com.gymconnect.authserver.workout.controller;
 
+import com.gymconnect.authserver.workout.dto.UserExerciseDto;
 import com.gymconnect.authserver.workout.dto.WorkoutDto;
 import com.gymconnect.authserver.workout.dto.WorkoutFromApi;
 import com.gymconnect.authserver.workout.model.Day;
+import com.gymconnect.authserver.workout.model.UserExercise;
 import com.gymconnect.authserver.workout.model.Workout;
 import com.gymconnect.authserver.workout.service.WorkoutService;
 import lombok.RequiredArgsConstructor;
@@ -70,5 +72,22 @@ public class WorkoutController {
 
         workoutService.deleteWorkout(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout deleted successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateWorkout(@PathVariable UUID id, @RequestBody WorkoutDto workoutDto) {
+        Optional<Workout> existingWorkout = workoutService.findById(id);
+        if (!existingWorkout.isEmpty()) {
+            // Update exercise details
+            Workout workout = existingWorkout.get();
+            workout.setUserId(workoutDto.getUserId());
+            workout.setDay(Day.valueOf(workoutDto.getDay()));
+
+            workoutService.updateWorkout(workout);
+            return new ResponseEntity<>(workout, HttpStatus.OK);
+        } else {
+            String errorMessage = "Workout not found.";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+        }
     }
 }

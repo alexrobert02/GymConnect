@@ -1,6 +1,7 @@
 import {Navigate, Outlet} from "react-router-dom";
 import Navbar from "../components/Navbar";
-//import Navbar from "../../components/Layout/Navbar";
+import AppFooter from "../components/Footer";
+
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -12,6 +13,7 @@ const LoginProtectedRoute = () => {
     <>
       <Navbar />
       <Outlet />
+    {/*<AppFooter />*/}
     </>
   ) : (
     <Navigate to="/login" />

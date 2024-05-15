@@ -6,6 +6,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 public class ExercisesService {
 
     private static final String url = "https://exercisedb.p.rapidapi.com/exercises";
-    private static final String xRapidApiKey = "b43f830148mshddfe7f9d9c9b95ap132d69jsnd33ecbfb6e38";
+    private static final String xRapidApiKey = "";
     private static final String xRapidApiHost = "exercisedb.p.rapidapi.com";
 
     private final RestTemplate restTemplate;
@@ -50,7 +51,7 @@ public class ExercisesService {
         }
     }
 
-    public List<ExerciseDTO> getExerciseByName(String name) {
+    public List<ExerciseDTO> getExerciseByName(String name, String limit) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("X-RapidAPI-Key", xRapidApiKey);
@@ -58,8 +59,11 @@ public class ExercisesService {
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<?> requestEntity = new HttpEntity<>(headers);
 
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url + "/name/{name}")
+                    .queryParam("limit", limit);
+
             ResponseEntity<List<ExerciseDTO>> response = restTemplate.exchange(
-                    url + "/name/{name}",
+                    builder.buildAndExpand(name).toUriString(),
                     HttpMethod.GET,
                     requestEntity,
                     new ParameterizedTypeReference<>() {

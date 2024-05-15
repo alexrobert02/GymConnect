@@ -16,6 +16,7 @@ import exerciseDb from "../../services/exerciseDbApi";
 import { ColumnsType } from "antd/es/table";
 import { v4 } from "uuid";
 import axios from "axios";
+import NewTableForm from "./NewTableForm";
 const { Title } = Typography;
 
 const axiosInstance = axios.create({
@@ -59,8 +60,10 @@ interface ExerciseTableProps {
 const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ id, exerciseData, title, onDragEnd, isModified, setIsModified }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [formVisible, setFormVisible] = useState(false);
+    const [workoutFormVisible, setWorkoutFormVisible] = useState(false);
     const [currentExercise, setCurrentExercise] = useState<ExerciseDataType | null>(null);
     const [action, setAction] = useState<string>('');
+    const [workoutAction, setWorkoutAction] = useState<string>('');
     const [formTitle, setFormTitle] = useState<string>('');
 
     const handleImageClick = (exercise: ExerciseDataType) => {
@@ -100,6 +103,11 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ id, exerciseDa
                 console.error("Error deleting workout:", error);
             });
         setIsModified(!isModified);
+    }
+    const onEditTable = () => {
+        setWorkoutFormVisible(true);
+        setWorkoutAction("edit");
+        console.log("Workout Form Open")
     }
 
     const handleAdd = () => {
@@ -171,15 +179,18 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ id, exerciseDa
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Title level={4}>{title}</Title>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <div style={{display: 'flex', alignItems: 'center'}}>
+                    <Title level={4}>{title}</Title>
+                    <Button icon={<EditOutlined/>} type="text" onClick={onEditTable}/>
+                </div>
                 <Popconfirm
                     title="Are you sure you want to delete this table?"
                     onConfirm={onDeleteTable}
                     okText="Yes"
                     cancelText="No"
                 >
-                    <Button icon={<DeleteOutlined />} type="text" danger />
+                    <Button icon={<DeleteOutlined/>} type="text" danger/>
                 </Popconfirm>
             </div>
             <DndContext onDragEnd={(event) => onDragEnd(event, 0)}>
@@ -194,7 +205,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ id, exerciseDa
                         pagination={false}
                         footer={() => (
                             <Space>
-                                <Button type="default" icon={<PlusOutlined />} onClick={handleAdd}>
+                                <Button type="default" icon={<PlusOutlined/>} onClick={handleAdd}>
                                     Add Exercise
                                 </Button>
                             </Space>
@@ -213,7 +224,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ id, exerciseDa
                     <img
                         src={currentExercise.exercise.gifUrl}
                         alt={currentExercise.exercise.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        style={{width: '100%', height: '100%', objectFit: 'cover'}}
                     />
                 )}
             </Modal>
@@ -227,6 +238,15 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ id, exerciseDa
                 setIsModified={setIsModified}
                 exercise={currentExercise}
             />
+            <NewTableForm
+                workoutId={id}
+                day={title}
+                action={workoutAction}
+                title={"Change Workout Day"}
+                isModalOpen={workoutFormVisible}
+                setIsModalOpen={setWorkoutFormVisible}
+                isModified={isModified}
+                setIsModified={setIsModified}/>
         </div>
     );
 });

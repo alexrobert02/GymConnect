@@ -64,6 +64,12 @@ function Navbar() {
       style: { ...linkStyles, cursor: "default" },
     },
     {
+      key: "3",
+      title: "Exercises",
+      label: <Link to="/exercises">Exercises</Link>,
+      style: linkStyles
+    },
+    {
       key: "6",
       title: "Profile",
       label: <Link to="/profile">Profile</Link>,

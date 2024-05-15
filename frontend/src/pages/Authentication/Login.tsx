@@ -23,6 +23,8 @@ function LoginPage() {
                 localStorage.setItem('token', data.access_token);
                 // Handle successful login, e.g., redirect to dashboard
                 navigate('/home')
+                // Refresh the browser
+                window.location.reload();
             } else {
                 // Authentication failed
                 console.log('Authentication failed');

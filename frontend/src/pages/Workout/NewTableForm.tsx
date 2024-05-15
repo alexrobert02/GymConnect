@@ -43,16 +43,26 @@ interface OptionValue {
 }
 
 interface NewTableFormProps {
+    workoutId: string;
+    day: string;
+    action: string;
+    title: string;
     isModalOpen: boolean;
     setIsModalOpen: (isModalOpen: boolean) => void;
     isModified: boolean;
     setIsModified: (isModified: boolean) => void;
 }
 
-const NewTableForm: React.FC<NewTableFormProps> = ({ isModalOpen, setIsModalOpen, isModified, setIsModified }) => {
+const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, day, action, title, isModalOpen, setIsModalOpen, isModified, setIsModified }) => {
     const [form] = Form.useForm();
     const [options, setOptions] = useState<OptionValue[]>([]);
     const [userId, setUserId] = useState<string>('')
+
+    useEffect(() => {
+        form.setFieldsValue({
+            workoutDay: day
+        }); // Set initial value for the form
+    }, [day, form]);
 
     const fetchData = () => {
         const token = extractToken();
@@ -109,7 +119,12 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ isModalOpen, setIsModalOpen
     const handleOk = () => {
         form.validateFields().then((values) => {
             console.log('Received values:', values);
-            saveWorkoutDay(values.workoutDay)
+            if(action === "create") {
+                saveWorkoutDay(values.workoutDay)
+            }
+            if(action === "edit") {
+                editWorkoutDay(values.workoutDay)
+            }
             form.resetFields();
         });
         setIsModified(!isModified);
@@ -130,6 +145,20 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ isModalOpen, setIsModalOpen
         });
     }
 
+    const editWorkoutDay = (day: string) => {
+        axiosInstance.put(`/workout/${workoutId}`, {
+            userId: userId,
+            day: day
+        })
+            .then(response => {
+                console.log('Workout saved successfully:', response.data);
+                fetchData();
+            })
+            .catch(error => {
+                console.error('Error saving workout:', error);
+            });
+    }
+
     const handleCancel = () => {
         setIsModalOpen(false)
     }
@@ -138,13 +167,13 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ isModalOpen, setIsModalOpen
         <Modal
             open={isModalOpen}
             onCancel={handleCancel}
-            title="Add New Workout Day"
+            title={title}
             footer={[
                 <Button key="cancel" onClick={handleCancel}>
                     Cancel
                 </Button>,
                 <Button key="submit" type="primary" onClick={handleOk}>
-                    Add
+                    Save
                 </Button>,
             ]}
             centered

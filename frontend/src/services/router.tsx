@@ -6,10 +6,11 @@ import LoginPage from "../pages/Authentication/Login";
 import HomePage from "../pages/Home/Home";
 import RegisterPage from "../pages/Authentication/Register";
 import LoginProtectedRoute from "./loginProtectedRoute";
-import Home from "../pages/Home/Home";
 import ProfilePage from "../pages/Profile/Profile";
 import NotFound from "../pages/NotFound/NotFound";
 import WorkoutPage from "../pages/Workout/Workout";
+import Exercises from "../pages/Exercises/Exercises";
+import ExerciseDetails from "../pages/ExerciseDetails/ExerciseDetails";
 
 const isAuthenticated = () => {
   const token = localStorage.getItem("token");
@@ -51,6 +52,14 @@ const router = createBrowserRouter([
       {
         path: "/workout",
         element: <PrivateRouteComponent component={WorkoutPage} path={"/workout"} />
+      },
+      {
+        path: "/exercises",
+        element: <PrivateRouteComponent component={Exercises} path={"/exercises"} />
+      },
+      {
+        path: "/exercise/:id",
+        element: <PrivateRouteComponent component={ExerciseDetails} path={"/exercise/:id"} /> // Add this line
       }
     ],
   },

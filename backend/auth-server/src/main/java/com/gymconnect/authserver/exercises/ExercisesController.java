@@ -25,8 +25,8 @@ public class ExercisesController {
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<ExerciseDTO>> getExerciseByName(@PathVariable String name) {
-        List<ExerciseDTO> result = exercisesService.getExerciseByName(name);
+    public ResponseEntity<List<ExerciseDTO>> getExerciseByName(@PathVariable String name, @RequestParam(defaultValue = "10") String limit) {
+        List<ExerciseDTO> result = exercisesService.getExerciseByName(name, limit);
         if (result != null) {
             return ResponseEntity.ok(result);
         } else {

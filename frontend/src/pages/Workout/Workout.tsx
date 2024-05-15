@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Workout.scss';
-import { Button, Modal } from 'antd';
+import { Alert, Button, Modal, Spin } from 'antd'; // Import Spin component
 import ExerciseTable, { ExerciseDataType } from './ExerciseTable';
 import NewTableForm from './NewTableForm';
 import WorkoutGrid from './WorkoutGrid'; // Importing WorkoutGrid component
@@ -42,14 +42,19 @@ const extractToken = () => {
 
 const WorkoutPage = () => {
     const [isModified, setIsModified] = useState<boolean>(false);
-    const [userId, setUserId] = useState<String>()
+    const [userId, setUserId] = useState<string>();
     const [workoutList, setWorkoutList] = useState<Workout[]>([]);
     const [formVisible, setFormVisible] = useState(false);
+    const [loading, setLoading] = useState(false); // State for loading indicator
+    const [error, setError] = useState<string | null>(null); // State for error message
 
     const fetchData = () => {
+        setLoading(true); // Set loading to true when starting fetch
+        setError(null); // Clear previous error
         const token = extractToken();
         if (!token) {
             console.error('No token found in local storage');
+            setLoading(false); // Set loading to false in case of error
             return;
         }
         const decodedToken: any = jwtDecode(token);
@@ -60,6 +65,7 @@ const WorkoutPage = () => {
                 .get(`/users/email/${email}`)
                 .then(response => {
                     setUserId(response.data.id);
+                    console.log('User id found.');
                     return response.data.id;
                 })
                 .then(id => {
@@ -67,41 +73,59 @@ const WorkoutPage = () => {
                     securedInstance
                         .get(`http://localhost:8082/api/v1/workout/user/${id}`)
                         .then(response => {
-                            console.log("Fetch successful");
+                            console.log('Fetch successful');
                             setWorkoutList(response.status === 404 ? [] : response.data);
                             console.log(response.data);
+                            setLoading(false); // Set loading to false after successful fetch
                         })
                         .catch(error => {
-                            if (error.response.status === 404) {
-                                console.error('Error fetching data:', error)
-                                setWorkoutList([]);
-                            }
+                            console.error('Error fetching data:', error);
+                            setError('Error fetching data.'); // Set error message
+                            setLoading(false); // Set loading to false in case of error
                         });
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
-                    setWorkoutList([]);
+                    setError('Error fetching data.'); // Set error message
+                    setLoading(false); // Set loading to false in case of error
                 });
         }
     };
 
     useEffect(() => {
         fetchData();
-        console.log("useEffect");
+        console.log('useEffect');
     }, [isModified]);
+
+    console.log("Error variable:", error)
 
     return (
         <div className="workout-page">
-            <Button type="primary" onClick={() => setFormVisible(true)}>
-                Add New Workout Day
-            </Button>
-            <WorkoutGrid // Using WorkoutGrid component to display workouts
+            <Spin spinning={loading} fullscreen />
+            {error && <Alert
+                message={error}
+                description="Please try again."
+                type="error"
+                showIcon
+            />} {/* Display error message if exists */}
+            {!loading && !error && (
+                <Button type="primary" onClick={() => setFormVisible(true)}>
+                    Add New Workout Day
+                </Button>
+            )}
+            {/* Render Spin component while loading */}
+            <WorkoutGrid
+                // Using WorkoutGrid component to display workouts
                 workoutList={workoutList}
                 setWorkoutList={setWorkoutList}
                 isModified={isModified}
                 setIsModified={setIsModified}
             />
             <NewTableForm
+                workoutId={''}
+                day={''}
+                action={'create'}
+                title={'Add New Workout Day'}
                 isModalOpen={formVisible}
                 setIsModalOpen={setFormVisible}
                 isModified={isModified}
