@@ -1,13 +1,10 @@
 package com.gymconnect.authserver.workout.controller;
 
-import com.gymconnect.authserver.exercises.ExerciseDTO;
-import com.gymconnect.authserver.exercises.ExercisesService;
-import com.gymconnect.authserver.user.User;
 import com.gymconnect.authserver.workout.dto.UserExerciseDto;
 import com.gymconnect.authserver.workout.model.UserExercise;
-import com.gymconnect.authserver.workout.model.Workout;
+import com.gymconnect.authserver.workout.model.WorkoutDay;
 import com.gymconnect.authserver.workout.service.UserExerciseService;
-import com.gymconnect.authserver.workout.service.WorkoutService;
+import com.gymconnect.authserver.workout.service.WorkoutDayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +18,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/userExercise")
 @RequiredArgsConstructor
 public class UserExerciseController {
-    private final WorkoutService workoutService;
+    private final WorkoutDayService workoutDayService;
     private final UserExerciseService userExerciseService;
 
     @PostMapping
@@ -31,15 +28,15 @@ public class UserExerciseController {
             return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Workout> optionalWorkout = workoutService.findById(userExerciseDto.getWorkoutId());
+        Optional<WorkoutDay> optionalWorkout = workoutDayService.findById(userExerciseDto.getWorkoutDayId());
         if (optionalWorkout.isPresent()) {
-            Workout workout = optionalWorkout.get();
+            WorkoutDay workoutDay = optionalWorkout.get();
             UserExercise userExercise = new UserExercise(userExerciseDto.getExerciseId(), userExerciseDto.getSets(), userExerciseDto.getReps(), userExerciseDto.getWeights(), userExerciseDto.getRest());
-            workout.addUserExercise(userExercise);
-            workoutService.updateWorkout(workout);
+            workoutDay.addUserExercise(userExercise);
+            workoutDayService.updateWorkoutDay(workoutDay);
             return new ResponseEntity<>(userExercise, HttpStatus.CREATED);
         } else {
-            String errorMessage = "Workout with id " + userExerciseDto.getWorkoutId() + " not found.";
+            String errorMessage = "Workout with id " + userExerciseDto.getWorkoutDayId() + " not found.";
             return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
         }
     }

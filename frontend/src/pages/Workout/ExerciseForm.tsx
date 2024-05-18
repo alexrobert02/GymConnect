@@ -9,7 +9,7 @@ import axios from "axios";
 const { Option } = Select;
 
 interface ExerciseFormProps {
-    workoutId: string;
+    workoutDayId: string;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
     title: string;
@@ -43,7 +43,7 @@ const formItemLayoutWithOutLabel = {
     },
 };
 
-const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutId, isOpen, setIsOpen, exercise, action , isModified, setIsModified}) => {
+const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIsOpen, exercise, action , isModified, setIsModified}) => {
     const [form] = Form.useForm();
     const [fetching, setFetching] = useState(false);
     const [options, setOptions] = useState<ExerciseValue[]>([]);
@@ -101,8 +101,8 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutId, isOpen, setIsOpe
     const createUserExercise = (id: string) => {
         form.validateFields().then(values => {
             console.log(values)
-            const newExercise: { workoutId: string, exerciseId: string, sets: number, reps: number[], weights: number, rest: number } = {
-                workoutId: workoutId,
+            const newExercise: { workoutDayId: string, exerciseId: string, sets: number, reps: number[], weights: number, rest: number } = {
+                workoutDayId: workoutDayId,
                 exerciseId: id,
                 sets: values.reps.length, // Calculate the sets based on the length of the reps array
                 reps: values.reps,
@@ -130,8 +130,8 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutId, isOpen, setIsOpe
         console.log("exercise id passed:", id)
         form.validateFields().then(values => {
             console.log(values)
-            const editedExercise: { workoutId: string, exerciseId: string, sets: number, reps: number[], weights: number, rest: number } = {
-                workoutId: workoutId,
+            const editedExercise: { workoutDayId: string, exerciseId: string, sets: number, reps: number[], weights: number, rest: number } = {
+                workoutDayId: workoutDayId,
                 exerciseId: id,
                 sets: values.reps.length, // Calculate the sets based on the length of the reps array
                 reps: values.reps,

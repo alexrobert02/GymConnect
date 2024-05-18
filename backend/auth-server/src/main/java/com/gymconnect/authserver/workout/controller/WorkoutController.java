@@ -1,11 +1,13 @@
 package com.gymconnect.authserver.workout.controller;
 
-import com.gymconnect.authserver.workout.dto.UserExerciseDto;
+import com.gymconnect.authserver.workout.dto.WorkoutDayDto;
+import com.gymconnect.authserver.workout.dto.WorkoutDayFromApi;
 import com.gymconnect.authserver.workout.dto.WorkoutDto;
 import com.gymconnect.authserver.workout.dto.WorkoutFromApi;
 import com.gymconnect.authserver.workout.model.Day;
-import com.gymconnect.authserver.workout.model.UserExercise;
 import com.gymconnect.authserver.workout.model.Workout;
+import com.gymconnect.authserver.workout.model.WorkoutDay;
+import com.gymconnect.authserver.workout.service.WorkoutDayService;
 import com.gymconnect.authserver.workout.service.WorkoutService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
@@ -26,17 +28,12 @@ public class WorkoutController {
 
     @PostMapping
     public ResponseEntity<?> createWorkout(@RequestBody WorkoutDto workoutDto) {
+          UUID userId = workoutDto.getUserId();
+          String name = workoutDto.getName();
 
-        if (!EnumUtils.isValidEnum(Day.class, workoutDto.getDay())) {
-            String errorMessage = "Invalid day provided. Please provide a valid day of the week.";
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
-        }
-        UUID userId = workoutDto.getUserId();
-        Day day = Day.valueOf(workoutDto.getDay());
-
-        List<Workout> existingWorkouts = workoutService.findByUserIdAndDay(userId, day);
-        if (!existingWorkouts.isEmpty()) {
-            String errorMessage = "A workout already exists for the user on this day.";
+        List<Workout> existingWorkoutDays = workoutService.findByUserIdAndName(userId, name);
+        if (!existingWorkoutDays.isEmpty()) {
+            String errorMessage = "A workout already exists for the user with this name.";
             return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
         }
 
@@ -56,14 +53,14 @@ public class WorkoutController {
         return new ResponseEntity<>(workouts, HttpStatus.OK);
     }
 
-    @GetMapping("/remaining-days/user/{userId}")
-    public ResponseEntity<List<Day>> getRemainingWorkoutDaysByUserId(@PathVariable("userId") UUID userId) {
-        List<Day> remainingDays = workoutService.findRemainingWorkoutDaysByUserId(userId);
-        return new ResponseEntity<>(remainingDays, HttpStatus.OK);
-    }
+//    @GetMapping("/remaining-days/user/{userId}")
+//    public ResponseEntity<List<Day>> getRemainingWorkoutDaysByUserId(@PathVariable("userId") UUID userId) {
+//        List<Day> remainingDays = workoutDayService.findRemainingWorkoutDaysByUserId(userId);
+//        return new ResponseEntity<>(remainingDays, HttpStatus.OK);
+//    }
 
     @DeleteMapping("/{workoutId}")
-    public ResponseEntity<?> deleteWorkout(@PathVariable("workoutId") UUID id) {
+    public ResponseEntity<?> deleteWorkoutDay(@PathVariable("workoutId") UUID id) {
         Optional<Workout> existingWorkout = workoutService.findById(id);
         if (existingWorkout.isEmpty()) {
             String errorMessage = "Workout not found.";
@@ -74,20 +71,19 @@ public class WorkoutController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout deleted successfully");
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateWorkout(@PathVariable UUID id, @RequestBody WorkoutDto workoutDto) {
-        Optional<Workout> existingWorkout = workoutService.findById(id);
-        if (!existingWorkout.isEmpty()) {
-            // Update exercise details
-            Workout workout = existingWorkout.get();
-            workout.setUserId(workoutDto.getUserId());
-            workout.setDay(Day.valueOf(workoutDto.getDay()));
-
-            workoutService.updateWorkout(workout);
-            return new ResponseEntity<>(workout, HttpStatus.OK);
-        } else {
-            String errorMessage = "Workout not found.";
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
-        }
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<?> updateWorkout(@PathVariable UUID id, @RequestBody WorkoutDto workoutDto) {
+//        Optional<Workout> existingWorkout = workoutService.findById(id);
+//        if (existingWorkout.isPresent()) {
+//            // Update exercise details
+//            Workout workout = existingWorkout.get();
+//            workoutDay.setDay(Day.valueOf(workoutDayDto.getDay()));
+//
+//            workoutService.updateWorkout(workout);
+//            return new ResponseEntity<>(workoutDay, HttpStatus.OK);
+//        } else {
+//            String errorMessage = "Workout not found.";
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+//        }
+//    }
 }

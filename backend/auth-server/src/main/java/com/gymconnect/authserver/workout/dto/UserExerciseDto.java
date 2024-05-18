@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 public class UserExerciseDto {
 
-    private UUID workoutId;
+    private UUID workoutDayId;
     private String exerciseId;
     private Integer sets;
     private List<Integer> reps;

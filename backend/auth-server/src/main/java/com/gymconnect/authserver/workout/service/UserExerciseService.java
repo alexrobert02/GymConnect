@@ -2,22 +2,21 @@ package com.gymconnect.authserver.workout.service;
 
 import com.gymconnect.authserver.workout.model.UserExercise;
 import com.gymconnect.authserver.workout.repository.UserExerciseRepository;
-import com.gymconnect.authserver.workout.repository.WorkoutRepository;
+import com.gymconnect.authserver.workout.repository.WorkoutDayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserExerciseService {
     private final UserExerciseRepository userExerciseRepository;
-    private final WorkoutRepository workoutRepository;
+    private final WorkoutDayRepository workoutDayRepository;
 
     @Autowired
-    public UserExerciseService(UserExerciseRepository userExerciseRepository, WorkoutRepository workoutRepository) {
+    public UserExerciseService(UserExerciseRepository userExerciseRepository, WorkoutDayRepository workoutDayRepository) {
         this.userExerciseRepository = userExerciseRepository;
-        this.workoutRepository = workoutRepository;
+        this.workoutDayRepository = workoutDayRepository;
     }
 
     public UserExercise findById(UUID id) {

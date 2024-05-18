@@ -18,20 +18,20 @@ public class Workout {
     private UUID id;
     @Column(name = "userId", nullable = false)
     private UUID userId;
-    @Column(name = "day", nullable = false)
-    private Day day;
+    @Column(name = "name", nullable = false)
+    private String name;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "workout_id", referencedColumnName = "id")
-    private List<UserExercise> userExercises;
+    @JoinColumn(name = "workoutId", referencedColumnName = "id")
+    private List<WorkoutDay> workoutDays;
 
-    public Workout(UUID userId, Day day) {
+    public Workout(UUID userId, String name) {
         this.id = UUID.randomUUID();
         this.userId = userId;
-        this.day = day;
-        this.userExercises = new ArrayList<>();
+        this.name = name;
+        this.workoutDays = new ArrayList<>();
     }
 
-    public void addUserExercise(UserExercise userExercise) {
-        userExercises.add(userExercise);
+    public void addWorkoutDay(WorkoutDay workoutDay) {
+        workoutDays.add(workoutDay);
     }
 }

@@ -49,7 +49,8 @@ export interface ExerciseDataType {
 }
 
 interface ExerciseTableProps {
-    id: string
+    workoutId: string
+    workoutDayId: string
     exerciseData: ExerciseDataType[];
     title: string;
     onDragEnd: (event: DragEndEvent, tableIndex: number) => void;
@@ -57,7 +58,7 @@ interface ExerciseTableProps {
     setIsModified: (isModified: boolean) => void;
 }
 
-const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ id, exerciseData, title, onDragEnd, isModified, setIsModified }) => {
+const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, workoutDayId, exerciseData, title, onDragEnd, isModified, setIsModified }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [formVisible, setFormVisible] = useState(false);
     const [workoutFormVisible, setWorkoutFormVisible] = useState(false);
@@ -95,7 +96,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ id, exerciseDa
     }
 
     const onDeleteTable = () => {
-        axiosInstance.delete(`/workout/${id}`)
+        axiosInstance.delete(`/workoutDay/${workoutDayId}`)
             .then(response => {
                 console.log("Workout deleted successfully.", response);
             })
@@ -164,14 +165,14 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ id, exerciseDa
             render: (text, record) => (
                 <div>
                     <Button icon={<EditOutlined />} onClick={() => openExerciseForm(record)} />
-                    {/*<Popconfirm*/}
-                    {/*    title="Are you sure you want to delete this exercise?"*/}
-                    {/*    onConfirm={() => onDeleteExercise(record)}*/}
-                    {/*    okText="Yes"*/}
-                    {/*    cancelText="No"*/}
-                    {/*>*/}
-                        <Button icon={<DeleteOutlined />} onClick={() => onDeleteExercise(record.id)}/>
-                    {/*</Popconfirm>*/}
+                    <Popconfirm
+                        title="Are you sure you want to delete this exercise?"
+                        onConfirm={() => onDeleteExercise(record.id)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button icon={<DeleteOutlined />}/>
+                    </Popconfirm>
                 </div>
             ),
         },
@@ -229,7 +230,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ id, exerciseDa
                 )}
             </Modal>
             <ExerciseForm
-                workoutId={id}
+                workoutDayId={workoutDayId}
                 title={formTitle}
                 isOpen={formVisible}
                 setIsOpen={setFormVisible}
@@ -239,7 +240,8 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ id, exerciseDa
                 exercise={currentExercise}
             />
             <NewTableForm
-                workoutId={id}
+                workoutId={workoutId}
+                workoutDayId={workoutDayId}
                 day={title}
                 action={workoutAction}
                 title={"Change Workout Day"}

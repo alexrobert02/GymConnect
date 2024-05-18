@@ -44,6 +44,7 @@ interface OptionValue {
 
 interface NewTableFormProps {
     workoutId: string;
+    workoutDayId: string;
     day: string;
     action: string;
     title: string;
@@ -53,7 +54,7 @@ interface NewTableFormProps {
     setIsModified: (isModified: boolean) => void;
 }
 
-const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, day, action, title, isModalOpen, setIsModalOpen, isModified, setIsModified }) => {
+const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, day, action, title, isModalOpen, setIsModalOpen, isModified, setIsModified }) => {
     const [form] = Form.useForm();
     const [options, setOptions] = useState<OptionValue[]>([]);
     const [userId, setUserId] = useState<string>('')
@@ -65,49 +66,27 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, day, action, tit
     }, [day, form]);
 
     const fetchData = () => {
-        const token = extractToken();
-        if (!token) {
-            console.error('No token found in local storage');
-            return;
-        }
-        const decodedToken: any = jwtDecode(token);
-        const email = decodedToken.sub;
-        console.log('email:', email);
-        if (email) {
-            axiosInstance
-                .get(`/users/email/${email}`)
-                .then(response => {
-                    setUserId(response.data.id)
-                    return response.data.id;
-                })
-                .then(id => {
-                    axiosInstance
-                        .get(`http://localhost:8082/api/v1/workout/remaining-days/user/${id}`)
-                        .then(response => {
-                            console.log("Fetch successful");
-                            const data = response.data;
-                            const exerciseValues: OptionValue[] = data.map((day: string) => ({
-                                label: day,
-                                value: day,
-                            }));
-                            setOptions(exerciseValues);
-                            console.log(response.data);
-                        })
-                        .catch(error => {
-                            if (error.response && error.response.status === 404) {
-                                console.error('Error fetching data:', error)
-                                setOptions([]);
-                            } else {
-                                console.error('Error fetching data:', error);
-                                setOptions([]);
-                            }
-                        });
-                })
-                .catch(error => {
+        axiosInstance
+            .get(`http://localhost:8082/api/v1/workoutDay/remaining-days/workout/${workoutId}`)
+            .then(response => {
+                console.log("Fetch successful");
+                const data = response.data;
+                const exerciseValues: OptionValue[] = data.map((day: string) => ({
+                    label: day,
+                    value: day,
+                }));
+                setOptions(exerciseValues);
+                console.log(response.data);
+            })
+            .catch(error => {
+                if (error.response && error.response.status === 404) {
+                    console.error('Error fetching data:', error)
+                    setOptions([]);
+                } else {
                     console.error('Error fetching data:', error);
                     setOptions([]);
-                });
-        }
+                }
+            });
     }
 
     useEffect(() => {
@@ -132,8 +111,8 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, day, action, tit
     };
 
     const saveWorkoutDay = (day: string) => {
-        axiosInstance.post('/workout', {
-            userId: userId,
+        axiosInstance.post('/workoutDay', {
+            workoutId: workoutId,
             day: day
         })
         .then(response => {
@@ -143,11 +122,11 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, day, action, tit
         .catch(error => {
             console.error('Error saving workout:', error);
         });
+        setIsModified(true);
     }
 
     const editWorkoutDay = (day: string) => {
-        axiosInstance.put(`/workout/${workoutId}`, {
-            userId: userId,
+        axiosInstance.put(`/workoutDay/${workoutDayId}`, {
             day: day
         })
             .then(response => {
