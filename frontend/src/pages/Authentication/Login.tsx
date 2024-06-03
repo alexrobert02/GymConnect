@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Authentication.scss';
 import api from '../../services/api'
 import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -16,6 +17,7 @@ function LoginPage() {
             });
 
             if (response.status === 200) {
+                toast.success('You are successfully logged in!')
                 // Authentication successful
                 const data = await response.data
                 console.log('Authentication successful:', data);
@@ -26,13 +28,13 @@ function LoginPage() {
                 // Refresh the browser
                 window.location.reload();
             } else {
+                toast.error('Invalid login email or password.')
                 // Authentication failed
                 console.log('Authentication failed');
                 // Handle failed login, e.g., display error message
             }
         } catch (error) {
-            console.error('Error occurred during login:', error);
-            // Handle error, e.g., display error message
+            toast.error('Invalid login email or password.')
         }
     };
 
@@ -60,7 +62,7 @@ function LoginPage() {
                     />
                     <button type="submit" onClick={handleLogin} className="auth-button">Login</button>
                 </form>
-                <p className="forgot-password">Forgot your password? <a href="#">Reset it here</a></p>
+                <p className="forgot-password">Forgot your password? <a href="/forgot-password">Reset it here</a></p>
                 <p className="signup-link">Don't have an account? <a href="/register">Sign up now</a></p>
             </div>
         </div>

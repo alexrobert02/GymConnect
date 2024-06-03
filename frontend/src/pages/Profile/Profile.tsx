@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Profile.scss';
 import { jwtDecode } from 'jwt-decode';
 import {securedInstance} from "../../services/api";
+import {Spin} from "antd";
 
 type UserDataTypes = {
     firstName: string;
@@ -44,13 +45,14 @@ const ProfilePage = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <Spin spinning={loading} fullscreen/>;
     }
 
     return (
         <div className="profile-page">
             <div className="profile-info">
-                <h2>{`${userData?.firstName} ${userData?.lastName}`}</h2>
+                <h2>Personal info</h2>
+                <p>{`${userData?.firstName} ${userData?.lastName}`}</p>
                 <p>Email: {userData?.email}</p>
             </div>
         </div>

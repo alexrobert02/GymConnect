@@ -30,28 +30,31 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(
-                    "/api/v1/auth/**",
-                    "/v2/api-docs",
-                    "/v3/api-docs",
-                    "/v3/api-docs/**",
-                    "/swagger-resources",
-                    "/swagger-resources/**",
-                    "/configuration/ui",
-                    "/configuration/security",
-                    "/swagger-ui/**",
-                    "/webjars/**",
-                    "/swagger-ui.html"
-                ).permitAll()
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> authorize
+                                .requestMatchers(
+                                        "/api/v1/auth/**",
+                                        "/v2/api-docs",
+                                        "/v3/api-docs",
+                                        "/v3/api-docs/**",
+                                        "/swagger-resources",
+                                        "/swagger-resources/**",
+                                        "/configuration/ui",
+                                        "/configuration/security",
+                                        "/swagger-ui/**",
+                                        "/webjars/**",
+                                        "/swagger-ui.html"
+                                ).permitAll()
 
-                .requestMatchers("/api/v1/admin/**").hasRole(ADMIN.name())
+                                .requestMatchers("/api/v1/admin/**").hasRole(ADMIN.name())
 
-                .requestMatchers(GET, "/api/v1/admin/**").hasAuthority(ADMIN_READ.name())
-                .requestMatchers(POST, "/api/v1/admin/**").hasAuthority(ADMIN_CREATE.name())
-                .requestMatchers(PUT, "/api/v1/admin/**").hasAuthority(ADMIN_UPDATE.name())
-                .requestMatchers(DELETE, "/api/v1/admin/**").hasAuthority(ADMIN_DELETE.name())
+                                .requestMatchers(GET, "/api/v1/admin/**").hasAuthority(ADMIN_READ.name())
+                                .requestMatchers(POST, "/api/v1/admin/**").hasAuthority(ADMIN_CREATE.name())
+                                .requestMatchers(PUT, "/api/v1/admin/**").hasAuthority(ADMIN_UPDATE.name())
+                                .requestMatchers(DELETE, "/api/v1/admin/**").hasAuthority(ADMIN_DELETE.name())
+
+                                .requestMatchers(GET, "/api/v1/users/check-email/**").permitAll()
+                                .requestMatchers(PUT, "/api/v1/users/reset-password/**").permitAll()
 
 //                .requestMatchers("/api/v1/exercises/**").permitAll()
 //                .requestMatchers("/api/v1/workout/day/**").permitAll()
@@ -60,21 +63,20 @@ public class SecurityConfiguration {
 //
 //                .requestMatchers("/api/v1/workout/exercise/**").permitAll()
 
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(sessionManagement -> sessionManagement
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .logout(logout -> logout
-                .logoutUrl("/api/v1/auth/logout")
-                .addLogoutHandler(logoutHandler)
-                .logoutSuccessHandler(((request, response, authentication) ->
-                    SecurityContextHolder.clearContext())
+                                .anyRequest().authenticated()
                 )
-            )
-
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> logout
+                        .logoutUrl("/api/v1/auth/logout")
+                        .addLogoutHandler(logoutHandler)
+                        .logoutSuccessHandler(((request, response, authentication) ->
+                                SecurityContextHolder.clearContext())
+                        )
+                )
         ;
         return http.build();
     }

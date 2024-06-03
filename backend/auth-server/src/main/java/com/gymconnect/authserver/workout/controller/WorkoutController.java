@@ -41,23 +41,11 @@ public class WorkoutController {
         return new ResponseEntity<>(createdWorkout, HttpStatus.CREATED);
     }
 
-//    @GetMapping("/day")
-//    public ResponseEntity<List<Workout>> getWorkoutsByUserAndDay(@RequestParam UUID userId, @RequestParam Day day) {
-//        List<Workout> workouts = workoutService.findByUserIdAndDay(userId, day);
-//        return new ResponseEntity<>(workouts, HttpStatus.OK);
-//    }
-
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<WorkoutFromApi>> getAllWorkoutsByUserId(@PathVariable("userId") UUID userId) {
         List<WorkoutFromApi> workouts = workoutService.findByUserId(userId);
         return new ResponseEntity<>(workouts, HttpStatus.OK);
     }
-
-//    @GetMapping("/remaining-days/user/{userId}")
-//    public ResponseEntity<List<Day>> getRemainingWorkoutDaysByUserId(@PathVariable("userId") UUID userId) {
-//        List<Day> remainingDays = workoutDayService.findRemainingWorkoutDaysByUserId(userId);
-//        return new ResponseEntity<>(remainingDays, HttpStatus.OK);
-//    }
 
     @DeleteMapping("/{workoutId}")
     public ResponseEntity<?> deleteWorkoutDay(@PathVariable("workoutId") UUID id) {
@@ -70,20 +58,4 @@ public class WorkoutController {
         workoutService.deleteWorkout(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout deleted successfully");
     }
-
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> updateWorkout(@PathVariable UUID id, @RequestBody WorkoutDto workoutDto) {
-//        Optional<Workout> existingWorkout = workoutService.findById(id);
-//        if (existingWorkout.isPresent()) {
-//            // Update exercise details
-//            Workout workout = existingWorkout.get();
-//            workoutDay.setDay(Day.valueOf(workoutDayDto.getDay()));
-//
-//            workoutService.updateWorkout(workout);
-//            return new ResponseEntity<>(workoutDay, HttpStatus.OK);
-//        } else {
-//            String errorMessage = "Workout not found.";
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
-//        }
-//    }
 }

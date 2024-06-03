@@ -14,7 +14,6 @@ import java.util.UUID;
 @Table(name = "workout_days")
 public class WorkoutDay {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     @Column(name = "day", nullable = false)
     private Day day;

@@ -1,18 +1,13 @@
 import React, { useState } from 'react';
-import { Input, Row, Col, Spin, Alert } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Input, Spin, Alert } from 'antd';
 import type { SearchProps } from 'antd/es/input/Search';
-import ExerciseCard from './ExerciseCard';
 import CardGrid from "./CardGrid";
-import debounce from "lodash/debounce";
-import axios from "axios"; // Import ExerciseCard component
 import { securedInstance} from "../../services/api";
 import {ExerciseType} from "../Workout/ExerciseTable";
 
 const { Search } = Input;
 
 const Exercises: React.FC = () => {
-    const [searchTerm, setSearchTerm] = useState('');
     const [exercises, setExercises] = useState<ExerciseType[]>([]);
     const [loading, setLoading] = useState(false); // State for loading indicator
     const [error, setError] = useState<string | null>(null); // State for error message
@@ -45,14 +40,6 @@ const Exercises: React.FC = () => {
             });
     };
 
-    const handleSearch = (value: string) => {
-        setSearchTerm(value);
-    };
-
-    const filteredExercises = exercises.filter(exercise =>
-        exercise.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
     return (
         <div style={{padding: '24px'}}>
             <Spin spinning={loading}>
@@ -82,7 +69,7 @@ const Exercises: React.FC = () => {
                     />
                 </div>
                 <CardGrid
-                    exercises={filteredExercises} // Render filtered exercises
+                    exercises={exercises} // Render filtered exercises
                 />
             </Spin>
         </div>

@@ -1,22 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Popconfirm, Table, Typography, Button, Modal, Space } from 'antd';
-import { MenuOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { DragEndEvent } from '@dnd-kit/core';
 import { DndContext } from '@dnd-kit/core';
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { CSS } from '@dnd-kit/utilities';
-import { ExclamationCircleFilled } from '@ant-design/icons';
 import {
     SortableContext,
-    useSortable,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import ExerciseForm from "./ExerciseForm";
-import exerciseDb from "../../services/exerciseDbApi";
 import { ColumnsType } from "antd/es/table";
-import { v4 } from "uuid";
 import axios from "axios";
 import NewTableForm from "./NewTableForm";
+import {toast} from "react-toastify";
 const { Title } = Typography;
 
 const axiosInstance = axios.create({
@@ -39,7 +34,6 @@ export interface ExerciseType {
 }
 
 export interface ExerciseDataType {
-    key: string | number;
     id: string;
     exercise: ExerciseType;
     sets: number;
@@ -88,9 +82,11 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
         axiosInstance.delete(`/userExercise/${id}`)
             .then(response => {
                 console.log("Workout deleted successfully.", response);
+                toast.success("Exercise deleted successfully!");
             })
             .catch(error => {
                 console.error("Error deleting workout:", error);
+                toast.error("Error deleting exercise!");
             });
         setIsModified(!isModified);
     }
@@ -99,9 +95,11 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
         axiosInstance.delete(`/workoutDay/${workoutDayId}`)
             .then(response => {
                 console.log("Workout deleted successfully.", response);
+                toast.success("Workout deleted successfully!")
             })
             .catch(error => {
                 console.error("Error deleting workout:", error);
+                toast.error("Error deleting workout!")
             });
         setIsModified(!isModified);
     }

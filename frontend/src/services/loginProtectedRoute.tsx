@@ -1,6 +1,5 @@
 import {Navigate, Outlet} from "react-router-dom";
 import Navbar from "../components/Navbar";
-import AppFooter from "../components/Footer";
 
 
 const isAuthenticated = () => {

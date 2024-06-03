@@ -2,7 +2,6 @@ package com.gymconnect.authserver.workout.controller;
 
 import com.gymconnect.authserver.workout.dto.UserExerciseDto;
 import com.gymconnect.authserver.workout.dto.WorkoutDayDto;
-import com.gymconnect.authserver.workout.dto.WorkoutDayFromApi;
 import com.gymconnect.authserver.workout.model.Day;
 import com.gymconnect.authserver.workout.model.UserExercise;
 import com.gymconnect.authserver.workout.model.Workout;
@@ -53,6 +52,9 @@ public class WorkoutDayController {
         WorkoutDay workoutDay = new WorkoutDay(Day.valueOf(workoutDayDto.getDay()));
         workout.addWorkoutDay(workoutDay);
         workoutService.updateWorkout(workout);
+
+        System.out.println(workoutDay.getId());
+
         return new ResponseEntity<>(workoutDay, HttpStatus.CREATED);
     }
 

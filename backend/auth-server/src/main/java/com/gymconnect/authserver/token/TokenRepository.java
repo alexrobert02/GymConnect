@@ -15,5 +15,11 @@ public interface TokenRepository extends JpaRepository<Token, UUID> {
     """)
     List<Token> findAllValidTokensByUser(UUID userId);
 
+    @Query("""
+    SELECT t FROM Token t INNER JOIN User u on t.user.id = u.id
+    WHERE u.id = :userId AND (t.expired = false OR t.revoked = false) AND t.tokenType="RESET-PASSWORD"
+    """)
+    List<Token> findAllValidPasswordResetTokensByUser(UUID userId);
+
     Optional<Token> findByToken(String token);
 }

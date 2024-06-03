@@ -46,13 +46,15 @@ const CardGrid: React.FC<CardGridProps> = ({ exercises }) => {
                     </Col>
                 ))}
             </Row>
-            <Pagination
-                style={{ marginTop: '20px' }}
-                current={currentPage}
-                total={exercises.length}
-                pageSize={exercisesPerPage}
-                onChange={handlePageChange}
-            />
+            {exercises.length > 0 && (
+                <Pagination
+                    style={{ marginTop: '20px' }}
+                    current={currentPage}
+                    total={exercises.length}
+                    pageSize={exercisesPerPage}
+                    onChange={handlePageChange}
+                />
+            )}
         </div>
     );
 };

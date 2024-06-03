@@ -7,15 +7,6 @@ const instance = axios.create({
     },
 });
 
-export const sendResetEmail = async (email: string): Promise<string> => {
-    try {
-        const response = await instance.post('/api/v1/auth/password-reset-request', { email });
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
-};
-
 export const securedInstance = axios.create({
     baseURL: 'http://localhost:8082',
     headers: {

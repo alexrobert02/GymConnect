@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
 import { Card, Col, Row, Typography } from 'antd';
 import { ExerciseType } from "../Workout/ExerciseTable";
-import { securedInstance } from "../../services/api";
-import {Workout} from "../Workout/Workout";
 
 const cardStyle: React.CSSProperties = {
     margin: 80

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {Form, InputNumber, Button, Select, Spin, Modal, Input} from 'antd';
+import {Form, InputNumber, Button, Select, Spin, Modal } from 'antd';
 import debounce from 'lodash/debounce';
 import { ExerciseDataType } from './ExerciseTable';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { securedInstance } from "../../services/api";
 import axios from "axios";
+import {toast} from "react-toastify";
 
 const { Option } = Select;
 
@@ -101,6 +102,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
     const createUserExercise = (id: string) => {
         form.validateFields().then(values => {
             console.log(values)
+            console.log("workoutDayId:", workoutDayId)
             const newExercise: { workoutDayId: string, exerciseId: string, sets: number, reps: number[], weights: number, rest: number } = {
                 workoutDayId: workoutDayId,
                 exerciseId: id,
@@ -113,9 +115,11 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
             securedInstance.post("http://localhost:8082/api/v1/userExercise", newExercise)
                 .then(response => {
                     console.log("Exercise submitted successfully:", response.data);
+                    toast.success("Exercise added successfully!");
                 })
                 .catch(error => {
                     console.error("Error submitting exercise:", error);
+                    toast.error("Error adding exercise!");
                 })
                 .finally(() => {
                     setIsOpen(false); // Close the form regardless of success or failure
@@ -143,9 +147,11 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
             securedInstance.put(`http://localhost:8082/api/v1/userExercise/${exercise?.id}`, editedExercise)
                 .then(response => {
                     console.log("Exercise submitted successfully:", response.data);
+                    toast.success("Exercise edited successfully!");
                 })
                 .catch(error => {
                     console.error("Error submitting exercise:", error);
+                    toast.error("Error editing exercise!");
                 })
                 .finally(() => {
                     setIsOpen(false); // Close the form regardless of success or failure

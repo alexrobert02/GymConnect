@@ -1,22 +1,24 @@
 package com.gymconnect.authserver;
 
-import com.gymconnect.authserver.auth.AuthenticationService;
-import com.gymconnect.authserver.auth.RegisterRequest;
-import com.gymconnect.authserver.user.Role;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import static com.gymconnect.authserver.user.Role.ADMIN;
-import static com.gymconnect.authserver.user.Role.USER;
 
 @SpringBootApplication
 public class AuthServerApplication {
 
+//	@Autowired
+//	private EmailService emailService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(AuthServerApplication.class, args);
 	}
+
+//	@EventListener(ApplicationReadyEvent.class)
+//	public void sendMail(){
+//		emailService.sendEmail("alex_robert02@yahoo.com",
+//				"This is the subject",
+//				"This is the Body of Email");
+//	}
 
 //	@Bean
 //	public CommandLineRunner commandLineRunner(

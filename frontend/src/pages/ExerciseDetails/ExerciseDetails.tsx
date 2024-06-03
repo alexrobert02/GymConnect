@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, Col, Row, Typography } from 'antd';
 import { ExerciseType } from "../Workout/ExerciseTable";
 import { securedInstance } from "../../services/api";
 import ExerciseInfo from "./ExerciseInfo";
 import ExerciseVideos from "./ExerciseVideos";
-import exerciseInfo from "./ExerciseInfo";
 
 const ExerciseDetails: React.FC = () => {
 
     const id = useParams<{ id: string }>();
     const [exercise, setExercise] = useState<ExerciseType>()
     const [exerciseVideos, setExerciseVideos] = useState([]);
-
-    const params = {
-        query: exercise?.name,
-    };
 
     const headers = {
         'X-RapidAPI-Key': process.env.RAPID_API_KEY,

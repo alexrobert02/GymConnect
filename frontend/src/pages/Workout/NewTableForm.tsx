@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, Form, Input, Button, Select} from 'antd';
+import { Modal, Form, Button, Select } from 'antd';
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
-import { securedInstance } from "../../services/api";
+import { toast } from 'react-toastify';
 
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:8082/api/v1',
@@ -11,20 +10,6 @@ const axiosInstance = axios.create({
         Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
 });
-
-const extractToken = () => {
-    try {
-        let token: string | null = localStorage.getItem('token');
-        if (!token) {
-            console.error('No token found in local storage');
-            return null;
-        }
-        return token;
-    } catch (err) {
-        console.error('Failed to decode token', err);
-        return null;
-    }
-};
 
 const formItemLayout = {
     labelCol: {
@@ -57,7 +42,6 @@ interface NewTableFormProps {
 const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, day, action, title, isModalOpen, setIsModalOpen, isModified, setIsModified }) => {
     const [form] = Form.useForm();
     const [options, setOptions] = useState<OptionValue[]>([]);
-    const [userId, setUserId] = useState<string>('')
 
     useEffect(() => {
         form.setFieldsValue({
@@ -117,12 +101,13 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, da
         })
         .then(response => {
             console.log('Workout saved successfully:', response.data);
-            fetchData();
+            toast.success('Workout saved successfully!')
+            setIsModified(!isModified);
         })
         .catch(error => {
             console.error('Error saving workout:', error);
+            toast.error('Error saving workout. Please try again later.');
         });
-        setIsModified(true);
     }
 
     const editWorkoutDay = (day: string) => {
@@ -131,10 +116,12 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, da
         })
             .then(response => {
                 console.log('Workout saved successfully:', response.data);
-                fetchData();
+                toast.success('Workout saved successfully!')
+                setIsModified(!isModified)
             })
             .catch(error => {
                 console.error('Error saving workout:', error);
+                toast.error('Error saving workout. Please try again later.');
             });
     }
 

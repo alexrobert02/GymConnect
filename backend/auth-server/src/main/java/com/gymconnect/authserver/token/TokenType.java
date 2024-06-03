@@ -1,5 +1,6 @@
 package com.gymconnect.authserver.token;
 
 public enum TokenType {
-    BEARER
+    BEARER,
+    RESET_PASSWORD
 }

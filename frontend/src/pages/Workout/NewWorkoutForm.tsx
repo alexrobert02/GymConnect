@@ -1,7 +1,5 @@
-// NewWorkoutForm.tsx
 import React from 'react';
-import { Modal, Form, Input, Button } from 'antd';
-import {WorkoutDay} from "./Workout";
+import { Modal, Form, Input } from 'antd';
 import axios from "axios";
 
 const axiosInstance = axios.create({

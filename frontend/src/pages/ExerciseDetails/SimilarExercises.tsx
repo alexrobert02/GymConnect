@@ -4,7 +4,7 @@ import { ExerciseType } from "../Workout/ExerciseTable";
 const { Meta } = Card;
 
 
-const ExerciseCard: React.FC<ExerciseType> = ({name, gifUrl }) => {
+const SimilarExercises: React.FC<ExerciseType> = ({name, gifUrl }) => {
     return (
         <Card
             hoverable
@@ -16,9 +16,9 @@ const ExerciseCard: React.FC<ExerciseType> = ({name, gifUrl }) => {
                 />
             }
         >
-            <Meta title={name} style={{textAlign: 'center'}}/>
+            <Meta title={name} />
         </Card>
     );
 };
 
-export default ExerciseCard;
+export default SimilarExercises;

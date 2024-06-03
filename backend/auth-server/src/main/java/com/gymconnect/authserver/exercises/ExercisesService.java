@@ -1,5 +1,6 @@
 package com.gymconnect.authserver.exercises;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -15,13 +16,13 @@ import java.util.List;
 public class ExercisesService {
 
     private static final String url = "https://exercisedb.p.rapidapi.com/exercises";
-    private static final String xRapidApiKey = "";
+    private final String xRapidApiKey;
     private static final String xRapidApiHost = "exercisedb.p.rapidapi.com";
-
     private final RestTemplate restTemplate;
 
-    public ExercisesService(RestTemplate restTemplate) {
+    public ExercisesService(RestTemplate restTemplate, Dotenv dotenv) {
         this.restTemplate = restTemplate;
+        xRapidApiKey = dotenv.get("RAPID_API_KEY");
     }
 
     public List<ExerciseDTO> getAllExercises() {

@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import './Workout.scss';
 import { Alert, Button, Modal, Spin, Tabs } from 'antd';
-import ExerciseTable, { ExerciseDataType } from './ExerciseTable';
+import { ExerciseDataType } from './ExerciseTable';
 import NewTableForm from './NewTableForm';
 import WorkoutGrid from './WorkoutGrid';
-import { DragEndEvent } from '@dnd-kit/core';
-import { arrayMove } from '@dnd-kit/sortable';
 import { jwtDecode } from 'jwt-decode';
 import { securedInstance } from '../../services/api';
 import axios from 'axios';
-import { v4 } from 'uuid';
 import NewWorkoutForm from "./NewWorkoutForm";
-
-const { TabPane } = Tabs;
 
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:8082/api/v1',
@@ -24,7 +19,6 @@ const axiosInstance = axios.create({
 
 export interface WorkoutDay {
     id: string;
-    userId: string;
     day: string;
     userExercises: ExerciseDataType[];
 }
@@ -85,6 +79,7 @@ const WorkoutPage = () => {
                         .get(`http://localhost:8082/api/v1/workout/user/${id}`)
                         .then(response => {
                             setWorkoutList(response.status === 404 ? [] : response.data);
+                            console.log(response.data)
                             setLoading(false);
                         })
                         .catch(error => {
@@ -186,7 +181,7 @@ const WorkoutPage = () => {
             />
             <Modal
                 title="Confirm Delete"
-                visible={deleteModalVisible}
+                open={deleteModalVisible}
                 onOk={handleDelete}
                 onCancel={() => setDeleteModalVisible(false)}
                 okText="Yes, delete it"

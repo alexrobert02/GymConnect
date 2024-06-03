@@ -1,30 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import './Home.scss';
-import exerciseDbApi from '../../services/exerciseDbApi';
 import backgroundImage from '../../img/8225-removebg.png'; // Import the image file
 
 const HomePage = () => {
     const navigate = useNavigate();
-    const [exercises, setExercises] = useState([]);
 
     useEffect(() => {
-
-        const fetchData = async () => {
-            try {
-                // Fetch data from the ExerciseDB API using your custom setup
-                const response = await exerciseDbApi.get('/exercises/name/press', {
-                    params: { limit: '10' }
-                });
-                console.log("Exercise Data:", response.data);
-                // Set the exercises state with the fetched data
-                setExercises(response.data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-
-        //fetchData()
 
         // Check if the user is authenticated (you might have your own logic here)
         const token = localStorage.getItem('token');

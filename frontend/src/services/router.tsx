@@ -1,6 +1,5 @@
 import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
-import { Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouteObject } from 'react-router-dom';
 import '../index.css';
 import LoginPage from "../pages/Authentication/Login";
 import HomePage from "../pages/Home/Home";
@@ -11,24 +10,26 @@ import NotFound from "../pages/NotFound/NotFound";
 import WorkoutPage from "../pages/Workout/Workout";
 import Exercises from "../pages/Exercises/Exercises";
 import ExerciseDetails from "../pages/ExerciseDetails/ExerciseDetails";
+import GenerateWorkout from "../pages/GenerateWorkout/GenerateWorkout";
+import ForgotPasswordPage from "../pages/Authentication/ForgotPassword";
+import ResetPasswordPage from "../pages/Authentication/ResetPassword";
+import AuthRedirect from './authRedirect';
 
-const isAuthenticated = () => {
+const isAuthenticated = (): boolean => {
   const token = localStorage.getItem("token");
   return !!token;
 };
 
-type PrivateRouteProps = {
+interface PrivateRouteProps {
   component: React.ComponentType<any>;
   path: string;
-};
+}
 
-const PrivateRouteComponent: React.FC<PrivateRouteProps> = ({
-  component: Component,
-}) => {
+const PrivateRouteComponent: React.FC<PrivateRouteProps> = ({ component: Component }) => {
   return isAuthenticated() ? <Component /> : <Navigate to="/login" replace />;
 };
 
-const router = createBrowserRouter([
+const routes: RouteObject[] = [
   {
     path: "*",
     element: <NotFound />,
@@ -47,31 +48,44 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <PrivateRouteComponent component={ProfilePage} path="/home" />,
+        element: <PrivateRouteComponent component={ProfilePage} path="/profile" />,
       },
       {
         path: "/workout",
-        element: <PrivateRouteComponent component={WorkoutPage} path={"/workout"} />
+        element: <PrivateRouteComponent component={WorkoutPage} path="/workout" />
       },
       {
         path: "/exercises",
-        element: <PrivateRouteComponent component={Exercises} path={"/exercises"} />
+        element: <PrivateRouteComponent component={Exercises} path="/exercises" />
       },
       {
         path: "/exercise/:id",
-        element: <PrivateRouteComponent component={ExerciseDetails} path={"/exercise/:id"} /> // Add this line
-      }
+        element: <PrivateRouteComponent component={ExerciseDetails} path="/exercise/:id" />
+      },
+      {
+        path: "/generate-workout",
+        element: <PrivateRouteComponent component={GenerateWorkout} path="/generate-workout" />
+      },
     ],
   },
   {
     path: '/login',
-    element: <LoginPage />,
-    //errorElement: <NotFoundPage />
+    element: <AuthRedirect><LoginPage /></AuthRedirect>,
   },
   {
     path: '/register',
-    element: <RegisterPage/>
+    element: <AuthRedirect><RegisterPage /></AuthRedirect>,
+  },
+  {
+    path: '/forgot-password',
+    element: <AuthRedirect><ForgotPasswordPage /></AuthRedirect>,
+  },
+  {
+    path: '/reset-password/:token',
+    element: <AuthRedirect><ResetPasswordPage /></AuthRedirect>,
   }
-]);
+];
+
+const router = createBrowserRouter(routes);
 
 export default router;

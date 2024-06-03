@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ExerciseTable from './ExerciseTable';
 import { DragEndEvent } from '@dnd-kit/core';
-import { v4 } from 'uuid';
 import { WorkoutDay } from './Workout'
 
 interface WorkoutGridProps {
@@ -18,8 +17,8 @@ const WorkoutGrid: React.FC<WorkoutGridProps> = ({ workoutId, workoutList, setWo
     const onDragEnd = ({ active, over }: DragEndEvent, tableIndex: number) => {
         if (!over) return;
         const newList = [...workoutList];
-        const activeIndex = newList[tableIndex].userExercises.findIndex(exercise => exercise.key === active.id);
-        const overIndex = newList[tableIndex].userExercises.findIndex(exercise => exercise.key === over.id);
+        const activeIndex = newList[tableIndex].userExercises.findIndex(exercise => exercise.id === active.id);
+        const overIndex = newList[tableIndex].userExercises.findIndex(exercise => exercise.id === over.id);
         const movedExercise = newList[tableIndex].userExercises[activeIndex];
         newList[tableIndex].userExercises.splice(activeIndex, 1);
         newList[tableIndex].userExercises.splice(overIndex, 0, movedExercise);

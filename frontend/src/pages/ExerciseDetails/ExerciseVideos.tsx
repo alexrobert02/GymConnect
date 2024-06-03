@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import {Button, Card} from "antd";
 import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons';
-import { ExerciseType } from "../Workout/ExerciseTable";
 
 const cardStyle: React.CSSProperties = {
     margin: 80
