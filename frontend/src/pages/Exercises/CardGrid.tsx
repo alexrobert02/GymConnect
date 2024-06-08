@@ -32,14 +32,7 @@ const CardGrid: React.FC<CardGridProps> = ({ exercises }) => {
                             to={`/exercise/${exercise.id}`}
                         >
                             <ExerciseCard
-                                id={exercise.id}
-                                name={exercise.name}
-                                bodyPart={exercise.bodyPart}
-                                equipment={exercise.equipment}
-                                gifUrl={exercise.gifUrl}
-                                target={exercise.target}
-                                secondaryMuscles={exercise.secondaryMuscles}
-                                instructions={exercise.instructions}
+                                exercise={exercise}
                             />
                         </Link>
 

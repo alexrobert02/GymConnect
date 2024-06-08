@@ -1,22 +1,36 @@
 import React from 'react';
-import { Card } from 'antd';
+import { Card, Button, Flex } from 'antd'; // Import Flex from Ant Design
 import { ExerciseType } from "../Workout/ExerciseTable";
+import './ExerciseCard.scss';
 const { Meta } = Card;
 
+export interface ExerciseCardProps {
+    exercise: ExerciseType;
+}
 
-const ExerciseCard: React.FC<ExerciseType> = ({name, gifUrl }) => {
+const ExerciseCard: React.FC<ExerciseCardProps> = ({ exercise }) => {
     return (
-        <Card
+        <Card className={"border-shadow"}
             hoverable
-            style={{width: '250px', borderRadius: '9px'}}
+            style={{ width: '250px', borderRadius: '9px' }}
             cover={
                 <img
-                    alt={name}
-                    src={gifUrl}
+                    alt={exercise.name}
+                    src={exercise.gifUrl}
                 />
             }
         >
-            <Meta title={name} style={{textAlign: 'center'}}/>
+            <Flex justify="space-between" style={{ marginBottom: '20px'}}>
+                {/* Button for bodyPart */}
+                <Button type="primary" className={"border-shadow"}>
+                    {exercise.bodyPart}
+                </Button>
+                {/* Button for target */}
+                <Button type="default" className={"border-shadow"}>
+                    {exercise.target}
+                </Button>
+            </Flex>
+            <Meta title={exercise.name} style={{ textAlign: 'center' }} />
         </Card>
     );
 };

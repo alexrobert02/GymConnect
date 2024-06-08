@@ -34,6 +34,25 @@ public class ExercisesController {
         }
     }
 
+    @GetMapping("/target/{target}")
+    public ResponseEntity<List<ExerciseDTO>> getRandomExercisesByTarget(@PathVariable String target, @RequestParam(defaultValue = "20") String limit) {
+        List<ExerciseDTO> result = exercisesService.getRandomExercisesByTarget(target, limit);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/equipment/{type}")
+    public ResponseEntity<List<ExerciseDTO>> getRandomExercisesByEquipment(@PathVariable String type, @RequestParam(defaultValue = "20") String limit) {
+        List<ExerciseDTO> result = exercisesService.getRandomExercisesByEquipment(type, limit);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ExerciseDTO> getExerciseById(@PathVariable String id) {
         ExerciseDTO exercise = exercisesService.getExerciseById(id);

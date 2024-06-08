@@ -12,6 +12,7 @@ import { ColumnsType } from "antd/es/table";
 import axios from "axios";
 import NewTableForm from "./NewTableForm";
 import {toast} from "react-toastify";
+import '../Exercises/ExerciseCard.scss'
 const { Title } = Typography;
 
 const axiosInstance = axios.create({
@@ -197,7 +198,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
                     items={exerciseData.map((_, index) => index.toString())}
                     strategy={verticalListSortingStrategy}
                 >
-                    <Table
+                    <Table 
                         dataSource={exerciseData}
                         columns={columns}
                         rowKey={(record) => record.id}

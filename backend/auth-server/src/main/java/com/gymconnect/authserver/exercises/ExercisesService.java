@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -72,6 +73,84 @@ public class ExercisesService {
                     name
             );
             return response.getBody();
+
+        } catch (Exception e) {
+            log.error("Something went wrong while getting value from RapidAPI", e);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Exception while calling endpoint of RapidAPI for exercise-db",
+                    e
+            );
+        }
+    }
+
+    public List<ExerciseDTO> getRandomExercisesByTarget(String target, String limit) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-RapidAPI-Key", xRapidApiKey);
+            headers.set("X-RapidAPI-Host", xRapidApiHost);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url + "/target/{target}")
+                    .queryParam("limit", 1500);
+
+            ResponseEntity<List<ExerciseDTO>> response = restTemplate.exchange(
+                    builder.buildAndExpand(target).toUriString(),
+                    HttpMethod.GET,
+                    requestEntity,
+                    new ParameterizedTypeReference<>() {
+                    },
+                    target
+            );
+
+            List<ExerciseDTO> exercises = response.getBody();
+            if (exercises != null && !exercises.isEmpty()) {
+                Collections.shuffle(exercises);
+
+                return exercises.subList(0, Math.min(Integer.parseInt(limit), exercises.size()));
+            }
+
+            return Collections.emptyList();
+
+        } catch (Exception e) {
+            log.error("Something went wrong while getting value from RapidAPI", e);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Exception while calling endpoint of RapidAPI for exercise-db",
+                    e
+            );
+        }
+    }
+
+    public List<ExerciseDTO> getRandomExercisesByEquipment(String type, String limit) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-RapidAPI-Key", xRapidApiKey);
+            headers.set("X-RapidAPI-Host", xRapidApiHost);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url + "/equipment/{type}")
+                    .queryParam("limit", 1500);
+
+            ResponseEntity<List<ExerciseDTO>> response = restTemplate.exchange(
+                    builder.buildAndExpand(type).toUriString(),
+                    HttpMethod.GET,
+                    requestEntity,
+                    new ParameterizedTypeReference<>() {
+                    },
+                    type
+            );
+
+            List<ExerciseDTO> exercises = response.getBody();
+            if (exercises != null && !exercises.isEmpty()) {
+                Collections.shuffle(exercises);
+
+                return exercises.subList(0, Math.min(Integer.parseInt(limit), exercises.size()));
+            }
+
+            return Collections.emptyList();
 
         } catch (Exception e) {
             log.error("Something went wrong while getting value from RapidAPI", e);

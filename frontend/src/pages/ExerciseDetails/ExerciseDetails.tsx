@@ -4,11 +4,14 @@ import { ExerciseType } from "../Workout/ExerciseTable";
 import { securedInstance } from "../../services/api";
 import ExerciseInfo from "./ExerciseInfo";
 import ExerciseVideos from "./ExerciseVideos";
+import SimilarExercises from "./SimilarExercises";
 
 const ExerciseDetails: React.FC = () => {
 
     const id = useParams<{ id: string }>();
-    const [exercise, setExercise] = useState<ExerciseType>()
+    const [exercise, setExercise] = useState<ExerciseType>();
+    const [targetMuscleExercises, setTargetMuscleExercises] = useState<ExerciseType[]>([]);
+    const [equipmentExercises, setEquipmentExercises] = useState<ExerciseType[]>([]);
     const [exerciseVideos, setExerciseVideos] = useState([]);
 
     const headers = {
@@ -21,13 +24,13 @@ const ExerciseDetails: React.FC = () => {
             .then(response => {
                 console.log(response)
                 setExercise(response.data)
-                return response.data.name;
+                return response.data;
             })
-            .then(name => {
-                console.log(`https://youtube-search-and-download.p.rapidapi.com/search?query=${name}`)
-                securedInstance.get(`https://youtube-search-and-download.p.rapidapi.com/search?query=${name}`,
+            .then(exercise => {
+                console.log(`https://youtube-search-and-download.p.rapidapi.com/search?query=${exercise.name}`)
+                securedInstance.get(`https://youtube-search-and-download.p.rapidapi.com/search?query=${exercise.name}`,
                     {
-                        params: { query: name },
+                        params: { query: exercise.name },
                         headers: headers
                     })
                     .then(response => {
@@ -42,6 +45,22 @@ const ExerciseDetails: React.FC = () => {
                     .catch(error => {
                         console.error('Error fetching data:', error);
                     });
+                securedInstance.get(`http://localhost:8082/api/v1/exercises/target/${exercise.target}`)
+                    .then(response => {
+                        console.log("Target muscle exercises:", response.data)
+                        setTargetMuscleExercises(response.data);
+                    })
+                    .catch(error => {
+                        console.log('Error fetching data:', error)
+                    })
+                securedInstance.get(`http://localhost:8082/api/v1/exercises/equipment/${exercise.equipment}`)
+                    .then(response => {
+                        console.log("Equipment muscle exercises:", response.data)
+                        setEquipmentExercises(response.data);
+                    })
+                    .catch(error => {
+                        console.log('Error fetching data:', error)
+                    })
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
@@ -60,6 +79,8 @@ const ExerciseDetails: React.FC = () => {
         <div>
             <ExerciseInfo exercise={exercise}/>
             <ExerciseVideos exerciseVideos={exerciseVideos} name={exercise?.name}/>
+            <SimilarExercises title={"Exercises That Target The Same Muscles Group"} exercises={targetMuscleExercises}/>
+            <SimilarExercises title={"Exercises That Uses The Same Equipments"} exercises={equipmentExercises}/>
         </div>
     );
 };
