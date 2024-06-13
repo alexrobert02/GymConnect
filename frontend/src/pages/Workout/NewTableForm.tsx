@@ -1,15 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Form, Button, Select } from 'antd';
-import axios from "axios";
 import { toast } from 'react-toastify';
-
-const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8082/api/v1',
-    headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-});
+import { securedInstance } from "../../services/api";
 
 const formItemLayout = {
     labelCol: {
@@ -50,8 +42,8 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, da
     }, [day, form]);
 
     const fetchData = () => {
-        axiosInstance
-            .get(`http://localhost:8082/api/v1/workoutDay/remaining-days/workout/${workoutId}`)
+        securedInstance
+            .get(`/api/v1/workoutDay/remaining-days/workout/${workoutId}`)
             .then(response => {
                 console.log("Fetch successful");
                 const data = response.data;
@@ -95,7 +87,7 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, da
     };
 
     const saveWorkoutDay = (day: string) => {
-        axiosInstance.post('/workoutDay', {
+        securedInstance.post('/api/v1/workoutDay', {
             workoutId: workoutId,
             day: day
         })
@@ -111,7 +103,7 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, da
     }
 
     const editWorkoutDay = (day: string) => {
-        axiosInstance.put(`/workoutDay/${workoutDayId}`, {
+        securedInstance.put(`/api/v1/workoutDay/${workoutDayId}`, {
             day: day
         })
             .then(response => {

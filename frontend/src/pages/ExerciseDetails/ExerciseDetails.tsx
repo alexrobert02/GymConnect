@@ -20,7 +20,7 @@ const ExerciseDetails: React.FC = () => {
     };
 
     const fetchExercise = () => {
-        securedInstance.get(`http://localhost:8082/api/v1/exercises/${id.id}`)
+        securedInstance.get(`/api/v1/exercises/${id.id}`)
             .then(response => {
                 console.log(response)
                 setExercise(response.data)
@@ -45,7 +45,7 @@ const ExerciseDetails: React.FC = () => {
                     .catch(error => {
                         console.error('Error fetching data:', error);
                     });
-                securedInstance.get(`http://localhost:8082/api/v1/exercises/target/${exercise.target}`)
+                securedInstance.get(`/api/v1/exercises/target/${exercise.target}`)
                     .then(response => {
                         console.log("Target muscle exercises:", response.data)
                         setTargetMuscleExercises(response.data);
@@ -53,7 +53,7 @@ const ExerciseDetails: React.FC = () => {
                     .catch(error => {
                         console.log('Error fetching data:', error)
                     })
-                securedInstance.get(`http://localhost:8082/api/v1/exercises/equipment/${exercise.equipment}`)
+                securedInstance.get(`/api/v1/exercises/equipment/${exercise.equipment}`)
                     .then(response => {
                         console.log("Equipment muscle exercises:", response.data)
                         setEquipmentExercises(response.data);

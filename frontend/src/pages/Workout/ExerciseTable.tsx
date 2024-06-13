@@ -13,15 +13,8 @@ import axios from "axios";
 import NewTableForm from "./NewTableForm";
 import {toast} from "react-toastify";
 import '../Exercises/ExerciseCard.scss'
+import {securedInstance} from "../../services/api";
 const { Title } = Typography;
-
-const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8082/api/v1',
-    headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-});
 
 export interface ExerciseType {
     bodyPart: string;
@@ -80,7 +73,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
 
     const onDeleteExercise = (id: string) => {
         // Handle delete action here
-        axiosInstance.delete(`/userExercise/${id}`)
+        securedInstance.delete(`/api/v1/userExercise/${id}`)
             .then(response => {
                 console.log("Workout deleted successfully.", response);
                 toast.success("Exercise deleted successfully!");
@@ -93,7 +86,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
     }
 
     const onDeleteTable = () => {
-        axiosInstance.delete(`/workoutDay/${workoutDayId}`)
+        securedInstance.delete(`/api/v1/workoutDay/${workoutDayId}`)
             .then(response => {
                 console.log("Workout deleted successfully.", response);
                 toast.success("Workout deleted successfully!")

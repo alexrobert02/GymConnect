@@ -33,7 +33,7 @@ const ProfilePage = () => {
             const email = decodedToken.sub; // Extract email from decoded token
 
             if (email) {
-                securedInstance.get(`http://localhost:8082/api/v1/users/email/${email}`)
+                securedInstance.get(`/api/v1/users/email/${email}`)
                     .then((response) => {
                         setUserData(response.data);
                         setLoading(false); // Set loading to false when data is fetched

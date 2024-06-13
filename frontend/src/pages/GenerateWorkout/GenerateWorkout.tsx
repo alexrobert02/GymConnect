@@ -225,7 +225,7 @@ const GenerateWorkout = () => {
             const newWorkout: WorkoutDay[] = await Promise.all(response.data.map(async (workoutDay: any) => {
                 const userExercises = await Promise.all(workoutDay.exercises.map(async (exercise: any) => {
                     try {
-                        const matchedExerciseResponse = await securedInstance.get(`http://localhost:8082/api/v1/exercises/name/${transformExerciseName(exercise.exercise)}`, {
+                        const matchedExerciseResponse = await securedInstance.get(`/api/v1/exercises/name/${transformExerciseName(exercise.exercise)}`, {
                             params: { limit: '1500' }
                         });
 

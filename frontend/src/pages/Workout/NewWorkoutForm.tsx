@@ -1,14 +1,6 @@
 import React from 'react';
 import { Modal, Form, Input } from 'antd';
-import axios from "axios";
-
-const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8082/api/v1',
-    headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-});
+import {securedInstance} from "../../services/api";
 
 interface NewWorkoutFormProps {
     userId: string | undefined
@@ -27,7 +19,7 @@ const NewWorkoutForm: React.FC<NewWorkoutFormProps> = ({ userId, isFormOpen, set
             .then(values => {
                 console.log(values.name)
                 console.log(userId)
-                axiosInstance.post('/workout', {
+                securedInstance.post('/api/v1/workout', {
                     userId: userId,
                     name: values.name
                 })

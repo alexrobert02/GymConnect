@@ -6,16 +6,7 @@ import NewTableForm from './NewTableForm';
 import WorkoutGrid from './WorkoutGrid';
 import { jwtDecode } from 'jwt-decode';
 import { securedInstance } from '../../services/api';
-import axios from 'axios';
 import NewWorkoutForm from "./NewWorkoutForm";
-
-const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8082/api/v1',
-    headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-});
 
 export interface WorkoutDay {
     id: string;
@@ -68,15 +59,15 @@ const WorkoutPage = () => {
         const decodedToken: any = jwtDecode(token);
         const email = decodedToken.sub;
         if (email) {
-            axiosInstance
-                .get(`/users/email/${email}`)
+            securedInstance
+                .get(`/api/v1/users/email/${email}`)
                 .then(response => {
                     setUserId(response.data.id);
                     return response.data.id;
                 })
                 .then(id => {
                     securedInstance
-                        .get(`http://localhost:8082/api/v1/workout/user/${id}`)
+                        .get(`/api/v1/workout/user/${id}`)
                         .then(response => {
                             setWorkoutList(response.status === 404 ? [] : response.data);
                             console.log(response.data)
@@ -117,7 +108,7 @@ const WorkoutPage = () => {
         if (workoutIdToDelete) {
             setLoading(true);
             securedInstance
-                .delete(`http://localhost:8082/api/v1/workout/${workoutIdToDelete}`)
+                .delete(`/api/v1/workout/${workoutIdToDelete}`)
                 .then(() => {
                     setIsModified(!isModified);
                     setDeleteModalVisible(false);

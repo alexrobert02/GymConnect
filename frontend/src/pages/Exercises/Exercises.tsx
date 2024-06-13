@@ -22,7 +22,7 @@ const Exercises: React.FC = () => {
     const fetchExercises = (exerciseName: string) => {
         setLoading(true); // Set loading to true when starting fetch
         setError(null); // Clear previous error
-        securedInstance.get(`http://localhost:8082/api/v1/exercises/name/${exerciseName}`, {
+        securedInstance.get(`/api/v1/exercises/name/${exerciseName}`, {
             params: {
                 limit: '1500'
             }

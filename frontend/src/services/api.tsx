@@ -1,14 +1,15 @@
 import axios from 'axios';
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+
 const instance = axios.create({
-    baseURL: 'http://localhost:8082',
+    baseURL: 'http://localhost:8222',
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
 export const securedInstance = axios.create({
-    baseURL: 'http://localhost:8082',
+    baseURL: 'http://localhost:8222',
     headers: {
         'Content-Type': 'application/json',
         Accept: "application/json",

@@ -4,7 +4,6 @@ import debounce from 'lodash/debounce';
 import { ExerciseDataType } from './ExerciseTable';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { securedInstance } from "../../services/api";
-import axios from "axios";
 import {toast} from "react-toastify";
 
 const { Option } = Select;
@@ -59,14 +58,10 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
         }); // Set initial value for the form
     }, [exercise, form, exercise?.id]);
 
-    const fetchUserList = debounce(async (exerciseName: string) => {
+    const fetchExerciseList = debounce(async (exerciseName: string) => {
         setFetching(true);
         try {
-            const response = await axios.get(`http://localhost:8082/api/v1/exercises/name/${exerciseName}`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                }
-            });
+            const response = await securedInstance.get(`/api/v1/exercises/name/${exerciseName}`);
             const data = response.data;
             const exerciseValues: ExerciseValue[] = data.map((exercise: { name: string; id: string }) => ({
                 label: exercise.name,
@@ -112,7 +107,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
                 rest: values.rest
             };
             console.log('new exercise:', newExercise);
-            securedInstance.post("http://localhost:8082/api/v1/userExercise", newExercise)
+            securedInstance.post("/api/v1/userExercise", newExercise)
                 .then(response => {
                     console.log("Exercise submitted successfully:", response.data);
                     toast.success("Exercise added successfully!");
@@ -144,7 +139,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
             };
             console.log('edited exercise:', editedExercise);
             console.log("exercise id:", exercise?.id)
-            securedInstance.put(`http://localhost:8082/api/v1/userExercise/${exercise?.id}`, editedExercise)
+            securedInstance.put(`/api/v1/userExercise/${exercise?.id}`, editedExercise)
                 .then(response => {
                     console.log("Exercise submitted successfully:", response.data);
                     toast.success("Exercise edited successfully!");
@@ -192,7 +187,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
                         showSearch
                         placeholder="Search exercise"
                         filterOption={false}
-                        onSearch={fetchUserList}
+                        onSearch={fetchExerciseList}
                         notFoundContent={fetching ? <Spin size="small" /> : null}
                         loading={fetching}
                     >
