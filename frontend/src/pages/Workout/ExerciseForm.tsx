@@ -53,7 +53,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
             name: exercise?.exercise.name,
             sets: exercise?.sets,
             reps: exercise?.reps,
-            weights: exercise?.weights,
+            weight: exercise?.weight,
             rest: exercise?.rest
         }); // Set initial value for the form
     }, [exercise, form, exercise?.id]);
@@ -78,16 +78,24 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
     }, 800);
 
     const handleFinish = () => {
+        console.log("exercise id:", form.getFieldsValue)
         form.validateFields().then(values => {
+            console.log("exercise id:", values)
             const selectedExercise = options.find(option => option.value === values.name);
+            console.log("selected exercise:")
             if (selectedExercise) {
                 if(action === "add") {
                     createUserExercise(selectedExercise.id);
                 }
                 if(action === "edit") {
+                    console.log("on edit")
                     updateUserExercise(selectedExercise.id);
                 }
-
+            }
+            else {
+                if (action === "edit" && exercise != null) {
+                    updateUserExercise(exercise.exercise.id);
+                }
             }
         });
 
@@ -98,12 +106,12 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
         form.validateFields().then(values => {
             console.log(values)
             console.log("workoutDayId:", workoutDayId)
-            const newExercise: { workoutDayId: string, exerciseId: string, sets: number, reps: number[], weights: number, rest: number } = {
+            const newExercise: { workoutDayId: string, exerciseId: string, sets: number, reps: number[], weight: number, rest: number } = {
                 workoutDayId: workoutDayId,
                 exerciseId: id,
                 sets: values.reps.length, // Calculate the sets based on the length of the reps array
                 reps: values.reps,
-                weights: values.weights,
+                weight: values.weight,
                 rest: values.rest
             };
             console.log('new exercise:', newExercise);
@@ -122,19 +130,19 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
                 });
         }).catch(error => {
             console.error("Form validation failed:", error);
-         });
+        });
     };
 
     const updateUserExercise = (id: string) => {
         console.log("exercise id passed:", id)
         form.validateFields().then(values => {
             console.log(values)
-            const editedExercise: { workoutDayId: string, exerciseId: string, sets: number, reps: number[], weights: number, rest: number } = {
+            const editedExercise: { workoutDayId: string, exerciseId: string, sets: number, reps: number[], weight: number, rest: number } = {
                 workoutDayId: workoutDayId,
                 exerciseId: id,
                 sets: values.reps.length, // Calculate the sets based on the length of the reps array
                 reps: values.reps,
-                weights: values.weights,
+                weight: values.weight,
                 rest: values.rest
             };
             console.log('edited exercise:', editedExercise);
@@ -249,7 +257,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
 
                 </Form.Item>
 
-                <Form.Item label="Weights" name="weights" rules={[{ type: 'number', min: 0, required: true }]}
+                <Form.Item label="Weight" name="weight" rules={[{ type: 'number', min: 0, required: true }]}
                            {...formItemLayout}>
                     <InputNumber />
                 </Form.Item>

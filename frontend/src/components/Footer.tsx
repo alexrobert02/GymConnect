@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "../img/logo.svg"
 
-const AppFooter: React.FC = () => {
+const Footer: React.FC = () => {
     return (
         <div style={styles.div}>
             <div className="footer" style={styles.footer}>
@@ -18,6 +18,7 @@ const AppFooter: React.FC = () => {
 
 const styles = {
     div: {
+        //marginTop: 'auto',
         borderTopLeftRadius: "50px",
         borderTopRightRadius: "50px",
         background: "#191f2a",
@@ -51,4 +52,4 @@ const styles = {
     },
 };
 
-export default AppFooter;
+export default Footer;

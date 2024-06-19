@@ -19,7 +19,7 @@ export interface ExerciseDataType {
     exercise: ExerciseType;
     sets: number;
     reps: number[];
-    weights: number;
+    weight: number;
     rest: number;
 }
 
@@ -74,12 +74,23 @@ const GeneratedTable: React.FC<ExerciseTableProps> = React.memo(({ exerciseData,
             title: 'Reps',
             dataIndex: 'reps',
             key: 'reps',
-            render: (reps: number[]) => <span>{reps.join(', ')}</span>,
+            render: (reps: number[]) => {
+                // Check if all elements in the array are the same
+                const allSame = reps.every(rep => rep === reps[0]);
+
+                // If all elements are the same, show only the first element
+                if (allSame) {
+                    return <span>{reps[0]}</span>;
+                }
+
+                // Otherwise, show the entire array joined by commas
+                return <span>{reps.join(', ')}</span>;
+            }
         },
         {
-            title: 'Weights',
-            dataIndex: 'weights',
-            key: 'weights',
+            title: 'Weight',
+            dataIndex: 'weight',
+            key: 'weight',
         },
         {
             title: 'Rest',
@@ -95,27 +106,27 @@ const GeneratedTable: React.FC<ExerciseTableProps> = React.memo(({ exerciseData,
                     <Title level={4}>{title}</Title>
                 </div>
             </div>
-                <Table
-                    dataSource={exerciseData}
-                    columns={columns}
-                    rowKey={(record) => record.id}
-                    pagination={false}
-                />
-                <Modal
-                    open={modalVisible}
-                    onCancel={handleCloseModal}
-                    footer={null}
-                    title={currentExercise ? currentExercise.exercise.name : ''}
-                    width={'30%'}
-                >
-                    {currentExercise && (
-                        <img
-                            src={currentExercise.exercise.gifUrl}
-                            alt={currentExercise.exercise.name}
-                            style={{width: '100%', height: '100%', objectFit: 'cover'}}
-                        />
-                    )}
-                </Modal>
+            <Table
+                dataSource={exerciseData}
+                columns={columns}
+                rowKey={(record) => record.id}
+                pagination={false}
+            />
+            <Modal
+                open={modalVisible}
+                onCancel={handleCloseModal}
+                footer={null}
+                title={currentExercise ? currentExercise.exercise.name : ''}
+                width={'30%'}
+            >
+                {currentExercise && (
+                    <img
+                        src={currentExercise.exercise.gifUrl}
+                        alt={currentExercise.exercise.name}
+                        style={{width: '100%', height: '100%', objectFit: 'cover'}}
+                    />
+                )}
+            </Modal>
         </div>
     );
 });

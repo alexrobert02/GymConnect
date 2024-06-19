@@ -33,7 +33,7 @@ spring:
         - id: exercise-plan
           uri: http://localhost:8070
           predicates:
-            - Path=/api/v1/exercise-plan/**
+            - Path=/api/v1/generate-workout/**
         - id: auth
           uri: http://localhost:8090
           predicates:
@@ -54,3 +54,8 @@ spring:
           uri: http://localhost:8050
           predicates:
             - Path=/api/v1/workoutDay/**
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Form, Input } from 'antd';
 import {securedInstance} from "../../services/api";
+import {toast} from "react-toastify";
 
 interface NewWorkoutFormProps {
     userId: string | undefined
@@ -25,14 +26,14 @@ const NewWorkoutForm: React.FC<NewWorkoutFormProps> = ({ userId, isFormOpen, set
                 })
                     .then(response => {
                         console.log('Workout saved successfully:', response.data);
-                        //fetchData();
+                        toast.success('Workout deleted successfully.')
                     })
                     .catch(error => {
                         console.error('Error saving workout:', error);
-                    });
+                    })
+                    .finally(() => setIsModified(!isModified))
                 form.resetFields();
                 console.log(values)
-                setIsModified(!isModified);
                 setIsFormOpen(false);
 
             })

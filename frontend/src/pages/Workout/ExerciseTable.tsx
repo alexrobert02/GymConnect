@@ -32,7 +32,7 @@ export interface ExerciseDataType {
     exercise: ExerciseType;
     sets: number;
     reps: number[];
-    weights: number;
+    weight: number;
     rest: number;
 }
 
@@ -89,13 +89,13 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
         securedInstance.delete(`/api/v1/workoutDay/${workoutDayId}`)
             .then(response => {
                 console.log("Workout deleted successfully.", response);
-                toast.success("Workout deleted successfully!")
+                toast.success("Workout day deleted successfully.")
             })
             .catch(error => {
                 console.error("Error deleting workout:", error);
                 toast.error("Error deleting workout!")
-            });
-        setIsModified(!isModified);
+            })
+            .finally(() => setIsModified(!isModified))
     }
     const onEditTable = () => {
         setWorkoutFormVisible(true);
@@ -139,12 +139,23 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
             title: 'Reps',
             dataIndex: 'reps',
             key: 'reps',
-            render: (reps: number[]) => <span>{reps.join(', ')}</span>,
+            render: (reps: number[]) => {
+                // Check if all elements in the array are the same
+                const allSame = reps.every(rep => rep === reps[0]);
+
+                // If all elements are the same, show only the first element
+                if (allSame) {
+                    return <span>{reps[0]}</span>;
+                }
+
+                // Otherwise, show the entire array joined by commas
+                return <span>{reps.join(', ')}</span>;
+            },
         },
         {
-            title: 'Weights',
-            dataIndex: 'weights',
-            key: 'weights',
+            title: 'Weight',
+            dataIndex: 'weight',
+            key: 'weight',
         },
         {
             title: 'Rest',
@@ -191,7 +202,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
                     items={exerciseData.map((_, index) => index.toString())}
                     strategy={verticalListSortingStrategy}
                 >
-                    <Table 
+                    <Table
                         dataSource={exerciseData}
                         columns={columns}
                         rowKey={(record) => record.id}

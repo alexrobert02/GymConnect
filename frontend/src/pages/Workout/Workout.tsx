@@ -7,6 +7,8 @@ import WorkoutGrid from './WorkoutGrid';
 import { jwtDecode } from 'jwt-decode';
 import { securedInstance } from '../../services/api';
 import NewWorkoutForm from "./NewWorkoutForm";
+import { toast } from "react-toastify";
+import { useMediaQuery } from 'react-responsive';
 
 export interface WorkoutDay {
     id: string;
@@ -110,12 +112,14 @@ const WorkoutPage = () => {
             securedInstance
                 .delete(`/api/v1/workout/${workoutIdToDelete}`)
                 .then(() => {
+                    toast.success('Workout deleted successfully.')
                     setIsModified(!isModified);
                     setDeleteModalVisible(false);
                     setWorkoutIdToDelete(undefined);
                 })
                 .catch(error => {
                     console.error('Error deleting workout:', error);
+                    toast.error('Error deleting workout!')
                     setError('Error deleting workout.');
                     setLoading(false);
                 });
@@ -124,7 +128,11 @@ const WorkoutPage = () => {
 
     const tabItems = workoutList.map(workout => ({
         key: workout.id,
-        label: workout.name,
+        label: (
+            <span className={"tabs-label-style"}>
+                { workout.name }
+            </span>
+        ),
         children: (
             <>
                 {!loading && !error && (
@@ -154,22 +162,35 @@ const WorkoutPage = () => {
         )
     }));
 
+    const tabBarExtraContent = {
+        left: (
+            <div className="extra-content">
+                <div className="section-title">My Workout Plans</div>
+                {/*<div className="instructions">Click on a tab to view or edit the workout details.</div>*/}
+            </div>
+        ),
+    };
+
+    const isMobile = useMediaQuery({ maxWidth: 767 });
+
     return (
         <div className="workout-page">
             <Spin spinning={loading} fullscreen={true}/>
             {error && <Alert message={error} description="Please try again." type="error" showIcon />}
-            <Tabs
-                //style={{marginTop: 100}}
-                type="editable-card"
-                tabPosition="left"
-                onEdit={onEdit}
-                tabBarGutter={16}
-                size="large"
-                hideAdd={false}
-                tabBarStyle={{ marginBottom: 16, marginRight: '8%' }}
-                animated={{ inkBar: true, tabPane: true }}
-                items={tabItems}
-            />
+            {(!error || workoutList.length > 0) &&
+                <Tabs
+                    type="editable-card"
+                    tabPosition={isMobile ? 'top' : 'left'}
+                    onEdit={onEdit}
+                    tabBarGutter={16}
+                    size="large"
+                    hideAdd={false}
+                    tabBarStyle={{ marginBottom: 16, marginRight: 16 }}
+                    animated={{ inkBar: true, tabPane: true }}
+                    items={tabItems}
+                    tabBarExtraContent={tabBarExtraContent}
+                />
+            }
             <Modal
                 title="Confirm Delete"
                 open={deleteModalVisible}

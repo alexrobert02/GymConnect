@@ -11,7 +11,8 @@ export interface SimilarExercisesProps {
 }
 
 const cardStyle: React.CSSProperties = {
-    margin: 100
+    margin: '5%',
+    padding: '20px'
 };
 
 // Custom CSS to hide scrollbar

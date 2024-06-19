@@ -11,3 +11,8 @@ server:
 spring:
   application:
     name: exercise-service
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

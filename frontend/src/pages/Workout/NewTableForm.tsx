@@ -38,7 +38,8 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, da
     useEffect(() => {
         form.setFieldsValue({
             workoutDay: day
-        }); // Set initial value for the form
+        });// Set initial value for the form
+        fetchData()
     }, [day, form]);
 
     const fetchData = () => {
@@ -65,11 +66,11 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, da
             });
     }
 
-    useEffect(() => {
-        if (isModalOpen) {
-            fetchData();
-        }
-    }, [isModalOpen]);
+    // useEffect(() => {
+    //     if (isModalOpen) {
+    //         fetchData();
+    //     }
+    // }, [isModalOpen]);
 
     const handleOk = () => {
         form.validateFields().then((values) => {
@@ -91,15 +92,15 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, da
             workoutId: workoutId,
             day: day
         })
-        .then(response => {
-            console.log('Workout saved successfully:', response.data);
-            toast.success('Workout saved successfully!')
-            setIsModified(!isModified);
-        })
-        .catch(error => {
-            console.error('Error saving workout:', error);
-            toast.error('Error saving workout. Please try again later.');
-        });
+            .then(response => {
+                console.log('Workout saved successfully:', response.data);
+                toast.success('Workout saved successfully!')
+                setIsModified(!isModified);
+            })
+            .catch(error => {
+                console.error('Error saving workout:', error);
+                toast.error('Error saving workout. Please try again later.');
+            });
     }
 
     const editWorkoutDay = (day: string) => {

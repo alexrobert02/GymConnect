@@ -1,3 +1,7 @@
+application:
+  config:
+    exercises-url: http://localhost:8222/api/v1/exercises
+
 eureka:
   instance:
     hostname: localhost
@@ -11,3 +15,8 @@ server:
 spring:
   application:
     name: openai-service
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

@@ -3,7 +3,8 @@ import { Card, Col, Row, Typography } from 'antd';
 import { ExerciseType } from "../Workout/ExerciseTable";
 
 const cardStyle: React.CSSProperties = {
-    margin: 80
+    margin: '5%',
+    padding: '20px'
 };
 
 const imgContainerStyle: React.CSSProperties = {

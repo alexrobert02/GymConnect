@@ -52,4 +52,18 @@ public class UserController {
         userService.resetPassword(request);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping
+    public ResponseEntity<?> updateUser(@RequestBody UpdateUserNameRequest request, Principal principal) {
+        Optional<User> userOptional = userService.getUserByEmail(principal.getName());
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setFirstName(request.getFirstName());
+            user.setLastName(request.getLastName());
+            userService.save(user);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
