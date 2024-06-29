@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBrowserRouter, Navigate, RouteObject } from 'react-router-dom';
+import {createBrowserRouter, Navigate, RouteObject} from 'react-router-dom';
 import '../index.css';
 import LoginPage from "../pages/Authentication/Login";
 import HomePage from "../pages/Home/Home";

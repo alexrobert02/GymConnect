@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { WorkoutDay } from '../Workout/Workout'
+import {WorkoutDay} from '../Workout/Workout'
 import GeneratedTable from "./GeneratedTable";
 
 interface WorkoutGridProps {

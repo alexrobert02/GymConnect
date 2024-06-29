@@ -31,7 +31,7 @@ public class UserExerciseController {
         Optional<WorkoutDay> optionalWorkout = workoutDayService.findById(userExerciseDto.getWorkoutDayId());
         if (optionalWorkout.isPresent()) {
             WorkoutDay workoutDay = optionalWorkout.get();
-            UserExercise userExercise = new UserExercise(userExerciseDto.getExerciseId(), userExerciseDto.getSets(), userExerciseDto.getReps(), userExerciseDto.getWeights(), userExerciseDto.getRest());
+            UserExercise userExercise = new UserExercise(userExerciseDto.getExerciseId(), userExerciseDto.getSets(), userExerciseDto.getReps(), userExerciseDto.getWeight(), userExerciseDto.getRest());
             workoutDay.addUserExercise(userExercise);
             workoutDayService.updateWorkoutDay(workoutDay);
             return new ResponseEntity<>(userExercise, HttpStatus.CREATED);
@@ -49,7 +49,7 @@ public class UserExerciseController {
             userExercise.setExerciseId(userExerciseDto.getExerciseId());
             userExercise.setSets(userExerciseDto.getSets());
             userExercise.setReps(userExerciseDto.getReps());
-            userExercise.setWeights(userExerciseDto.getWeights());
+            userExercise.setWeight(userExerciseDto.getWeight());
             userExercise.setRest(userExerciseDto.getRest());
 
             // Update exercise in database

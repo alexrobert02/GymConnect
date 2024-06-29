@@ -188,4 +188,62 @@ public class ExerciseService {
             );
         }
     }
+
+    public List<String> getBodyPartList() {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-RapidAPI-Key", xRapidApiKey);
+            headers.set("X-RapidAPI-Host", xRapidApiHost);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+            ResponseEntity<List<String>> response = restTemplate.exchange(
+                    url + "/bodyPartList",
+                    HttpMethod.GET,
+                    requestEntity,
+                    new ParameterizedTypeReference<>() {
+                    }
+            );
+            return response.getBody();
+
+        } catch (Exception e) {
+            log.error("Something went wrong while getting value from RapidAPI", e);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Exception while calling endpoint of RapidAPI for exercise-db",
+                    e
+            );
+        }
+    }
+
+    public List<ExerciseDto> getExercisesByBodyPart(String bodyPart, String limit) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-RapidAPI-Key", xRapidApiKey);
+            headers.set("X-RapidAPI-Host", xRapidApiHost);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url + "/bodyPart/{bodyPart}")
+                    .queryParam("limit", limit);
+
+            ResponseEntity<List<ExerciseDto>> response = restTemplate.exchange(
+                    builder.buildAndExpand(bodyPart).toUriString(),
+                    HttpMethod.GET,
+                    requestEntity,
+                    new ParameterizedTypeReference<>() {
+                    },
+                    bodyPart
+            );
+            return response.getBody();
+
+        } catch (Exception e) {
+            log.error("Something went wrong while getting value from RapidAPI", e);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Exception while calling endpoint of RapidAPI for exercise-db",
+                    e
+            );
+        }
+    }
 }

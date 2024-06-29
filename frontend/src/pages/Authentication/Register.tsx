@@ -1,51 +1,63 @@
-    import React, { useState } from 'react';
+import React, {useState} from 'react';
 import './Authentication.scss'; // You can style your register page in Register.scss file
 import api from '../../services/api'
 import {useNavigate} from "react-router-dom";
+import {Button, Form, Input} from "antd";
+import {EyeInvisibleOutlined, EyeOutlined, LockOutlined, UserOutlined} from "@ant-design/icons";
+import {toast} from "react-toastify";
 
 function RegisterPage() {
     const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [passwordMatchError, setPasswordMatchError] = useState('');
-    const [emailFormatError, setEmailFormatError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const [form] = Form.useForm();
 
-        if (!isValidEmail(email)) {
-            setEmailFormatError('Please enter a valid email address.');
-            return;
-        }
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
 
-        if (password !== confirmPassword) {
-            setPasswordMatchError("Passwords don't match");
-            return;
-        }
+    const toggleShowConfirmPassword = () => {
+        setShowConfirmPassword(!showConfirmPassword)
+    }
 
-        try {
-            const response = await api.post('/api/v1/auth/register', {
-                email: email,
-                password: password,
-                role: "USER"
-            });
+    const handleRegister = async () => {
 
-            if (response.status === 200) {
-                // Registration successful
-                const data = await response.data;
-                console.log('Registration successful:', data);
-                navigate('/')
-                // Handle successful registration, e.g., redirect to login page
-            } else {
-                // Registration failed
-                console.log('Registration failed');
-                // Handle failed registration, e.g., display error message
+        form.validateFields().then(async values => {
+
+            if (!isValidEmail(values.email)) {
+                toast.error("Invalid Email!")
+                return;
             }
-        } catch (error) {
-            console.error('Error occurred during registration:', error);
-            // Handle error, e.g., display error message
-        }
+
+            if (values.password !== values.confirmPassword) {
+                toast.error("Passwords don't match!")
+                return;
+            }
+
+            try {
+                const response = await api.post('/api/v1/auth/register', {
+                    email: values.email,
+                    password: values.password,
+                    role: "USER"
+                });
+
+                if (response.status === 200) {
+                    // Registration successful
+                    const data = await response.data;
+                    console.log('Registration successful:', data);
+                    navigate('/')
+                    // Handle successful registration, e.g., redirect to login page
+                } else {
+                    // Registration failed
+                    console.log('Registration failed');
+                    // Handle failed registration, e.g., display error message
+                }
+            } catch (error) {
+                console.error('Error occurred during registration:', error);
+                // Handle error, e.g., display error message
+            }
+        })
     };
 
     const isValidEmail = (email: string) => {
@@ -54,47 +66,61 @@ function RegisterPage() {
 
     return (
         <div className="auth-background-gradient">
-        <div className="auth-container">
-            <div className="auth-box">
-                <h2 className="auth-header">Create an Account</h2>
-                <form className="auth-form" onSubmit={handleRegister}>
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => {
-                            setEmail(e.target.value);
-                            setEmailFormatError('');
-                        }}
-                        className="auth-input"
-                        required
-                    />
-                    {emailFormatError && <p className="error-message">{emailFormatError}</p>}
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        className="auth-input"
-                        required
-                    />
-                    <input
-                        type="password"
-                        placeholder="Confirm Password"
-                        value={confirmPassword}
-                        onChange={e => {
-                            setConfirmPassword(e.target.value);
-                            setPasswordMatchError('');
-                        }}
-                        className="auth-input"
-                        required
-                    />
-                    {passwordMatchError && <p className="error-message">{passwordMatchError}</p>}
-                    <button type="submit" className="auth-button">Register</button>
-                </form>
-                <p className="login-link">Already have an account? <a href="/login">Login here</a></p>
+            <div className="auth-container">
+                <div className="auth-box">
+                    <h2 className="auth-header">Create an Account</h2>
+                    <Form
+                        form={form}
+                        name="normal_register"
+                        className="register-form"
+                        onFinish={handleRegister}
+                    >
+                        <Form.Item
+                            name="email"
+                            rules={[{ required: true, message: 'Please input your Email!' }]}
+                        >
+                            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
+                        </Form.Item>
+                        <Form.Item
+                            name="password"
+                            rules={[{ required: true, message: 'Please input your Password!' }]}
+                        >
+                            <Input
+                                prefix={<LockOutlined className="site-form-item-icon" />}
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Password"
+                                suffix={<span onClick={toggleShowPassword} style={{marginRight: '0px'}}>
+                                    {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                                </span>}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="confirmPassword"
+                            rules={[{ required: true, message: 'Please confirm your Password!' }]}
+                        >
+                            <Input
+                                prefix={<LockOutlined className="site-form-item-icon" />}
+                                type={showConfirmPassword ? "text" : "password"}
+                                placeholder="Confirm Password"
+                                suffix={<span onClick={toggleShowConfirmPassword} style={{marginRight: '0px'}}>
+                                    {showConfirmPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                                </span>}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Button type="primary" htmlType="submit" style={{ width: '400px' }}>
+                                Register
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                    <p className="login-link">Already have an account? <a href="/login">Login here</a></p>
+                </div>
             </div>
-        </div>
         </div>
     );
 }

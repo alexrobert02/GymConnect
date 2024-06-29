@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './Workout.scss';
-import { Alert, Button, Modal, Spin, Tabs } from 'antd';
-import { ExerciseDataType } from './ExerciseTable';
+import {Alert, Button, Modal, Spin, Tabs} from 'antd';
+import {ExerciseDataType} from './ExerciseTable';
 import NewTableForm from './NewTableForm';
 import WorkoutGrid from './WorkoutGrid';
-import { jwtDecode } from 'jwt-decode';
-import { securedInstance } from '../../services/api';
+import {jwtDecode} from 'jwt-decode';
+import {securedInstance} from '../../services/api';
 import NewWorkoutForm from "./NewWorkoutForm";
-import { toast } from "react-toastify";
-import { useMediaQuery } from 'react-responsive';
+import {toast} from "react-toastify";
+import {useMediaQuery} from 'react-responsive';
 
 export interface WorkoutDay {
     id: string;

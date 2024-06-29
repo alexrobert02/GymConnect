@@ -28,16 +28,16 @@ public class UserExercise {
     @CollectionTable(name="user_exercise_reps", joinColumns=@JoinColumn(name="user_exercise_id"))
     @Column(name="reps")
     private List<Integer> reps;
-    private Double weights;
+    private Double weight;
     @Column(name = "rest", nullable = false)
     private Integer rest;
 
-    public UserExercise(String exerciseId, Integer sets, List<Integer> reps, Double weights, Integer rest) {
+    public UserExercise(String exerciseId, Integer sets, List<Integer> reps, Double weight, Integer rest) {
         this.id = UUID.randomUUID();
         this.exerciseId = exerciseId;
         this.sets = sets;
         this.reps = reps;
-        this.weights = weights;
+        this.weight = weight;
         this.rest = rest;
     }
 
@@ -48,7 +48,7 @@ public class UserExercise {
                 ", exerciseId='" + exerciseId + '\'' +
                 ", sets=" + sets +
                 ", reps=" + reps +
-                ", weights=" + weights +
+                ", weight" + weight +
                 ", rest=" + rest +
                 '}';
     }

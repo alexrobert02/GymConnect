@@ -63,7 +63,7 @@ public class WorkoutDayController {
         Optional<WorkoutDay> optionalWorkout = workoutDayService.findById(userExerciseDto.getWorkoutDayId());
         if (optionalWorkout.isPresent()) {
             WorkoutDay workoutDay = optionalWorkout.get();
-            UserExercise userExercise = new UserExercise(userExerciseDto.getExerciseId(), userExerciseDto.getSets(), userExerciseDto.getReps(), userExerciseDto.getWeights(), userExerciseDto.getRest());
+            UserExercise userExercise = new UserExercise(userExerciseDto.getExerciseId(), userExerciseDto.getSets(), userExerciseDto.getReps(), userExerciseDto.getWeight(), userExerciseDto.getRest());
             workoutDay.addUserExercise(userExercise);
             workoutDayService.updateWorkoutDay(workoutDay);
             return new ResponseEntity<>(userExercise, HttpStatus.CREATED);

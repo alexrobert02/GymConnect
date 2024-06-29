@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 const instance = axios.create({
     baseURL: 'http://localhost:8222',

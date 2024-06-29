@@ -12,7 +12,6 @@ const LoginProtectedRoute = () => {
     <>
       <Navbar />
       <Outlet />
-    {/*<AppFooter />*/}
     </>
   ) : (
     <Navigate to="/login" />

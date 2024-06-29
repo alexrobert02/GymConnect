@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import './Profile.scss';
-import { jwtDecode } from 'jwt-decode';
-import { securedInstance } from "../../services/api";
-import {Button, Divider, Input, Modal, Space, Spin, Tooltip} from "antd";
-import { v4 } from "uuid";
+import React, {useState} from 'react';
+import {jwtDecode} from 'jwt-decode';
+import {securedInstance} from "../../services/api";
+import {Button, Divider, Modal, Space, Spin, Tooltip} from "antd";
+import {v4} from "uuid";
 import UserInfoInput from "./UserInfoInput";
-import { FormOutlined } from "@ant-design/icons";
-import { useJwt } from "react-jwt";
+import {FormOutlined} from "@ant-design/icons";
 import {toast} from "react-toastify";
 
 type ModalTitleProps = {

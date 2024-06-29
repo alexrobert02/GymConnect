@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Input } from 'antd';
+import {Form, Input, Modal} from 'antd';
 import {securedInstance} from "../../services/api";
 import {toast} from "react-toastify";
 

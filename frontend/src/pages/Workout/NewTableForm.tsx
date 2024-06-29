@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Modal, Form, Button, Select } from 'antd';
-import { toast } from 'react-toastify';
-import { securedInstance } from "../../services/api";
+import React, {useEffect, useState} from 'react';
+import {Button, Form, Modal, Select} from 'antd';
+import {toast} from 'react-toastify';
+import {securedInstance} from "../../services/api";
 
 const formItemLayout = {
     labelCol: {

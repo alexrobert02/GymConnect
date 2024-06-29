@@ -76,8 +76,34 @@
 }
 
 .login-link {
-  color: #555;
+  color: #ffffff;
   font-size: 14px;
   margin-top: 10px;
   text-align: center;
+}
+
+.login-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.password-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-input {
+  //padding-right: 40px; // Adjust as needed
+  width: 95%; // Add this line
+}
+
+.password-toggle-button {
+  position: absolute;
+  right: 0; // Adjust as needed
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer; // Add this line
+  align-content: center;
 }

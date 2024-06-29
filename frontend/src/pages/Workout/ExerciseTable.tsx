@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
-import { Popconfirm, Table, Typography, Button, Modal, Space } from 'antd';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { DragEndEvent } from '@dnd-kit/core';
-import { DndContext } from '@dnd-kit/core';
-import {
-    SortableContext,
-    verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import React, {useState} from 'react';
+import {Button, Modal, Popconfirm, Space, Table, Typography} from 'antd';
+import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
+import {DndContext, DragEndEvent} from '@dnd-kit/core';
+import {SortableContext, verticalListSortingStrategy,} from '@dnd-kit/sortable';
 import ExerciseForm from "./ExerciseForm";
-import { ColumnsType } from "antd/es/table";
-import axios from "axios";
+import {ColumnsType} from "antd/es/table";
 import NewTableForm from "./NewTableForm";
 import {toast} from "react-toastify";
 import '../Exercises/ExerciseCard.scss'
 import {securedInstance} from "../../services/api";
+
 const { Title } = Typography;
 
 export interface ExerciseType {
@@ -153,12 +149,12 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
             },
         },
         {
-            title: 'Weight',
+            title: 'Weight (kg)',
             dataIndex: 'weight',
             key: 'weight',
         },
         {
-            title: 'Rest',
+            title: 'Rest (sec)',
             dataIndex: 'rest',
             key: 'rest',
         },
@@ -168,14 +164,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
             render: (text, record) => (
                 <div>
                     <Button icon={<EditOutlined />} onClick={() => openExerciseForm(record)} />
-                    <Popconfirm
-                        title="Are you sure you want to delete this exercise?"
-                        onConfirm={() => onDeleteExercise(record.id)}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button icon={<DeleteOutlined />}/>
-                    </Popconfirm>
+                        <Button icon={<DeleteOutlined />} onClick={() => onDeleteExercise(record.id)}/>
                 </div>
             ),
         },
@@ -188,14 +177,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
                     <Title level={4}>{title}</Title>
                     <Button icon={<EditOutlined/>} type="text" onClick={onEditTable}/>
                 </div>
-                <Popconfirm
-                    title="Are you sure you want to delete this table?"
-                    onConfirm={onDeleteTable}
-                    okText="Yes"
-                    cancelText="No"
-                >
-                    <Button icon={<DeleteOutlined/>} type="text" danger/>
-                </Popconfirm>
+                    <Button icon={<DeleteOutlined/>} type="text" danger onClick={onDeleteTable}/>
             </div>
             <DndContext onDragEnd={(event) => onDragEnd(event, 0)}>
                 <SortableContext

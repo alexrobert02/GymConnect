@@ -62,4 +62,24 @@ public class ExerciseController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/bodyPartList")
+    public ResponseEntity<List<String>> getBodyPartList() {
+        List<String> result = exerciseService.getBodyPartList();
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/bodyPart/{bodyPart}")
+    public ResponseEntity<List<ExerciseDto>> getExercisesByBodyPart(@PathVariable String bodyPart, @RequestParam(defaultValue = "10") String limit) {
+        List<ExerciseDto> result = exerciseService.getExercisesByBodyPart(bodyPart, limit);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

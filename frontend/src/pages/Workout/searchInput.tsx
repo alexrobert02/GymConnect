@@ -1,6 +1,6 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { Select, Spin } from 'antd';
-import type { SelectProps } from 'antd';
+import React, {useMemo, useRef, useState} from 'react';
+import type {SelectProps} from 'antd';
+import {Select, Spin} from 'antd';
 import debounce from 'lodash/debounce';
 
 export interface SearchInputProps<ValueType = any>

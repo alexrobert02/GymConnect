@@ -1,5 +1,5 @@
-import { Input } from "antd";
-import React from "react";
+import {Input} from "antd";
+import React, {CSSProperties} from "react";
 
 type UserInfoInputProps = {
     title: string;
@@ -18,20 +18,38 @@ function UserInfoInput({
                        }: UserInfoInputProps) {
     const isInEditMode = !!(isEditing && setValue);
 
+    const styles: { [key: string]: CSSProperties } = {
+        userInfoInput: {
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '0rem',
+        },
+        inputLabel: {
+            marginRight: '1rem',
+            width: '5rem',
+            textAlign: 'right' as 'right',  // Casting to specific string
+        },
+        inputValue: {
+            marginLeft: '0rem',
+        },
+        inputField: {
+            marginLeft: '0rem',
+            width: '13rem',
+        },
+    };
+
     return (
-        <div className={"flex h-[2rem]"}>
-            <p className={"my-auto w-[9rem] text-end"}>{title}:</p>
+        <div style={styles.userInfoInput}>
+            <p style={styles.inputLabel}>{title}:</p>
             {!isInEditMode ? (
-                <p className={"my-auto ml-3"}>{value}</p>
+                <p style={styles.inputValue}>{value}</p>
             ) : (
-                <div>
-                    <Input
-                        type={type}
-                        className={"ml-2 w-[13rem] fill-black"}
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
-                    />
-                </div>
+                <Input
+                    type={type}
+                    style={styles.inputField}
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                />
             )}
         </div>
     );

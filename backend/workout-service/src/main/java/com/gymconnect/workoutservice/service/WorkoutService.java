@@ -55,7 +55,7 @@ public class WorkoutService {
                     userExerciseFromApi.setId(userExercise.getId());
                     userExerciseFromApi.setSets(userExercise.getSets());
                     userExerciseFromApi.setReps(userExercise.getReps());
-                    userExerciseFromApi.setWeights(userExercise.getWeights());
+                    userExerciseFromApi.setWeight(userExercise.getWeight());
                     userExerciseFromApi.setRest(userExercise.getRest());
 
                     ExerciseDto exercise = client.findExerciseById(userExercise.getExerciseId());

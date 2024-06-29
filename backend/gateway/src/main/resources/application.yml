@@ -3,10 +3,14 @@ spring:
     name: gateway
   config:
     import: optional:configserver:http://localhost:8888
-
+#  main:
+#    web-application-type: reactive
 management:
   endpoints:
     web:
+#      cors:
+#        allowed-origins: http://localhost:3000
+#        allowed-methods: GET, POST, PUT, PATCH, DELETE, OPTIONS
       exposure:
         include: "*"
   endpoint:

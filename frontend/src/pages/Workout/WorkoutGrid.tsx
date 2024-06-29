@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ExerciseTable from './ExerciseTable';
-import { DragEndEvent } from '@dnd-kit/core';
-import { WorkoutDay } from './Workout'
+import {DragEndEvent} from '@dnd-kit/core';
+import {WorkoutDay} from './Workout'
 
 interface WorkoutGridProps {
     workoutId: string;

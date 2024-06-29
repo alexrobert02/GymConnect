@@ -1,0 +1,19 @@
+.user-info-input {
+  display: flex;
+  align-items: center;
+
+  .input-label {
+    margin-right: 1rem;
+    width: 5rem;
+    text-align: right;
+  }
+
+  .input-value {
+    margin-left: 0rem;
+  }
+
+  .input-field {
+    margin-left: 0rem;
+    width: 13rem;
+  }
+}

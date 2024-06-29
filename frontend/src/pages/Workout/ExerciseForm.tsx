@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import {Form, InputNumber, Button, Select, Spin, Modal } from 'antd';
+import React, {useEffect, useState} from 'react';
+import {Button, Form, InputNumber, Modal, Select, Spin} from 'antd';
 import debounce from 'lodash/debounce';
-import { ExerciseDataType } from './ExerciseTable';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { securedInstance } from "../../services/api";
+import {ExerciseDataType} from './ExerciseTable';
+import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {securedInstance} from "../../services/api";
 import {toast} from "react-toastify";
 
 const { Option } = Select;
@@ -28,7 +28,7 @@ interface ExerciseValue {
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 4 },
+        sm: { span: 5 },
     },
     wrapperCol: {
         xs: { span: 24 },
@@ -257,11 +257,11 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
 
                 </Form.Item>
 
-                <Form.Item label="Weight" name="weight" rules={[{ type: 'number', min: 0, required: true }]}
+                <Form.Item label="Weight (kg)" name="weight" rules={[{ type: 'number', min: 0, required: true }]}
                            {...formItemLayout}>
                     <InputNumber />
                 </Form.Item>
-                <Form.Item label="Rest" name="rest" rules={[{ type: 'number', min: 0, required: true }]}
+                <Form.Item label="Rest (sec)" name="rest" rules={[{ type: 'number', min: 0, required: true }]}
                            {...formItemLayout}>
                     <InputNumber />
                 </Form.Item>

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Table, Typography, Modal } from 'antd';
-import { ColumnsType } from "antd/es/table";
+import React, {useState} from 'react';
+import {Modal, Table, Typography} from 'antd';
+import {ColumnsType} from "antd/es/table";
+
 const { Title } = Typography;
 
 export interface ExerciseType {

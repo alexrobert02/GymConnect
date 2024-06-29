@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { Button, Card } from "antd";
-import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons';
+import React, {useEffect, useRef} from 'react';
+import {Button, Card} from "antd";
+import {LeftCircleOutlined, RightCircleOutlined} from '@ant-design/icons';
 import {useMediaQuery} from "react-responsive";
 
 const cardStyle: React.CSSProperties = {
@@ -46,7 +46,7 @@ const ExerciseVideos: React.FC<ExerciseVideosProps> = ({ exerciseVideos, name })
     }, []);
 
     return (
-        <Card hoverable style={cardStyle}>
+        <Card hoverable className={"border-shadow"} style={cardStyle}>
             <h2 style={{ textAlign: "center" }}>
                 Watch{" "}
                 <strong style={{ color: "#1460e5", textTransform: "capitalize" }}>

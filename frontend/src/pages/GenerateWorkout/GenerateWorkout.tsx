@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import './GenerateWorkout.scss';
-import { Row, Col, Input, Form, Select, Button, Spin, Modal, message } from 'antd';
-import { GENDERS, GOALS, FITNESS_LEVELS } from './constants';
-import { securedInstance } from "../../services/api";
-import { WorkoutDay } from "../Workout/Workout";
+import {Button, Col, Form, Input, message, Modal, Row, Select, Spin} from 'antd';
+import {FITNESS_LEVELS, GENDERS} from './constants';
+import {securedInstance} from "../../services/api";
+import {WorkoutDay} from "../Workout/Workout";
 import GeneratedGrid from "./GeneratedGrid";
-import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import {jwtDecode} from "jwt-decode";
+import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
 
 interface UserData {
     height: number,
@@ -117,6 +117,7 @@ const GenerateWorkout = () => {
     const handleSubmit = async () => {
         try {
             const values: UserData = await form.validateFields();
+            values.goal="Muscle Gain"
             console.log('Received values:', values);
             setLoading(true);
 
@@ -175,13 +176,6 @@ const GenerateWorkout = () => {
                                     <Select options={FITNESS_LEVELS}/>
                                 </Form.Item>
                             </Col>
-                            <Col span={8}>
-                                <Form.Item label="Goal" name="goal" initialValue="Muscle Gain">
-                                    <Select options={GOALS}/>
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                        <Row justify="start" gutter={16} style={{marginTop: 16}}>
                             <Col span={8}>
                                 <Form.Item label="Number of days per week" name="numberOfDaysPerWeek">
                                     <Input/>

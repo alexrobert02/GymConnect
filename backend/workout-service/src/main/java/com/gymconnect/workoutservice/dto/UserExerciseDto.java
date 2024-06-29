@@ -12,6 +12,6 @@ public class UserExerciseDto {
     private String exerciseId;
     private Integer sets;
     private List<Integer> reps;
-    private Double weights;
+    private Double weight;
     private Integer rest;
 }

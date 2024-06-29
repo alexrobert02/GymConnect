@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
-import { Button } from 'antd'; // Import Button from antd
+import React, {useEffect} from 'react';
+import {useNavigate} from "react-router-dom";
+import {Button} from 'antd'; // Import Button from antd
 import './Home.scss';
-import backgroundImage from '../../img/8225-removebg.png'; // Import the image file
+//import backgroundImage from '../../img/8225-removebg.png'; // Import the image file
+import backgroundImage from '../../img/background.png';
 
 const HomePage = () => {
     const navigate = useNavigate();

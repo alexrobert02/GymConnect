@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Row, Col, Pagination } from 'antd';
+import React, {useState} from 'react';
+import {Col, Pagination, Row} from 'antd';
 import ExerciseCard from './ExerciseCard'; // Import ExerciseCard component
 import {ExerciseType} from "../Workout/ExerciseTable";
 import {Link} from "react-router-dom";
@@ -23,12 +23,13 @@ const CardGrid: React.FC<CardGridProps> = ({ exercises }) => {
     };
 
     return (
-        <div style={{ marginTop: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Row gutter={[50, 50]} justify="center">
+        <div style={{marginTop: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <h2 style={{textAlign: "center", marginBottom: '100px'}}>{"Showing exercises results"}</h2>
+            <Row gutter={[60, 50]} justify="center">
                 {currentExercises.map(exercise => (
                     <Col key={exercise.id}>
                         <Link
-                            style={{ textDecoration: "none" }}
+                            style={{textDecoration: "none"}}
                             to={`/exercise/${exercise.id}`}
                         >
                             <ExerciseCard
@@ -41,7 +42,7 @@ const CardGrid: React.FC<CardGridProps> = ({ exercises }) => {
             </Row>
             {exercises.length > 0 && (
                 <Pagination
-                    style={{ marginTop: '20px' }}
+                    style={{marginTop: '20px'}}
                     current={currentPage}
                     total={exercises.length}
                     pageSize={exercisesPerPage}

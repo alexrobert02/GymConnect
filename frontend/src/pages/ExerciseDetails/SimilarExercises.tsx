@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
-import { Button, Card } from 'antd';
-import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons';
+import React, {useRef} from 'react';
+import {Button} from 'antd';
+import {LeftCircleOutlined, RightCircleOutlined} from '@ant-design/icons';
 import ExerciseCard from '../Exercises/ExerciseCard'; // Import ExerciseCard component
-import { ExerciseType } from "../Workout/ExerciseTable";
-import { Link } from "react-router-dom";
+import {ExerciseType} from "../Workout/ExerciseTable";
+import {Link} from "react-router-dom";
 
 export interface SimilarExercisesProps {
     title: string;

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Card, Col, Row, Typography } from 'antd';
-import { ExerciseType } from "../Workout/ExerciseTable";
+import {Card, Col, Row, Typography} from 'antd';
+import {ExerciseType} from "../Workout/ExerciseTable";
+import '../Exercises/ExerciseCard.scss'
 
 const cardStyle: React.CSSProperties = {
     margin: '5%',
@@ -21,7 +22,7 @@ interface ExerciseInfoProps {
 const ExerciseInfo: React.FC<ExerciseInfoProps> = ({exercise}) => {
 
     return (
-        <Card hoverable style={cardStyle}>
+        <Card hoverable className={"border-shadow"} style={cardStyle}>
             <Row gutter={[32, 32]}> {/* Add gutter to create space between columns and rows */}
                 <Col xs={24} md={8} style={imgContainerStyle}> {/* Image column */}
                     <img
@@ -39,7 +40,7 @@ const ExerciseInfo: React.FC<ExerciseInfoProps> = ({exercise}) => {
                         <p style={{ textTransform: 'capitalize'}} ><strong>Equipment:</strong> {exercise?.equipment}</p>
                         <p style={{ textTransform: 'capitalize'}} ><strong>Target:</strong> {exercise?.target}</p>
                         <p style={{ textTransform: 'capitalize'}} ><strong>Secondary Muscles:</strong> {exercise?.secondaryMuscles && exercise.secondaryMuscles.join(', ')}</p>
-                        <p><strong>Instructions:</strong> {exercise?.instructions}</p>
+                        <p><strong>Instructions:</strong> {exercise?.instructions && exercise.instructions.join(' ')}</p>
                     </div>
                 </Col>
             </Row>

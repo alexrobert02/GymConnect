@@ -1,11 +1,13 @@
 package com.gymconnect.authservice.auth;
 
 import com.gymconnect.authservice.config.LogoutService;
+import com.gymconnect.authservice.token.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -19,6 +21,7 @@ public class AuthenticationController {
     private final AuthenticationService service;
     private final PasswordResetService passwordResetService;
     private final LogoutService logoutService;
+    private final TokenRepository tokenRepository;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register (
@@ -51,5 +54,16 @@ public class AuthenticationController {
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         logoutService.logout(request, response, authentication);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/validate_token/{token}")
+    public ResponseEntity<Boolean> validateToken(@PathVariable String token) {
+        var isTokenValid = tokenRepository.findByToken(token)
+                .map(t -> !t.isExpired() && !t.isRevoked())
+                .orElse(false);
+        if (isTokenValid) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
     }
 }

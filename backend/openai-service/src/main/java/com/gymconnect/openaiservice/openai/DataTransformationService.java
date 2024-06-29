@@ -23,17 +23,20 @@ public class DataTransformationService {
             List<UserExerciseResponse> userExercisesResponse = new ArrayList<>();
 
             for (UserExerciseDto userExercise : workoutDay.getExercises()) {
-                UserExerciseResponse userExerciseResponse = new UserExerciseResponse();
-
-                userExerciseResponse.setSets(transformToNumber(userExercise.getSets()));
-                userExerciseResponse.setReps(transformReps(userExercise.getReps(), userExerciseResponse.getSets()));
-                userExerciseResponse.setWeight(transformToNumber(userExercise.getWeight()));
-                userExerciseResponse.setRest(transformToNumber(userExercise.getRest()));
-
                 ExerciseResponse exercise = getMatchedExercise(userExercise.getExercise());
-                userExerciseResponse.setExercise(exercise);
+                if (exercise != null) {
+                    UserExerciseResponse userExerciseResponse = new UserExerciseResponse();
 
-                userExercisesResponse.add(userExerciseResponse);
+                    userExerciseResponse.setExercise(exercise);
+                    userExerciseResponse.setSets(transformToNumber(userExercise.getSets()));
+                    userExerciseResponse.setReps(transformReps(userExercise.getReps(), userExerciseResponse.getSets()));
+                    userExerciseResponse.setWeight(transformToNumber(userExercise.getWeight()));
+                    userExerciseResponse.setRest(transformToNumber(userExercise.getRest()));
+                    userExercisesResponse.add(userExerciseResponse);
+                }
+                else {
+                    System.out.println("exercise skipped");
+                }
             }
 
             workoutDayResponse.setUserExercises(userExercisesResponse);
@@ -94,7 +97,7 @@ public class DataTransformationService {
         if (exerciseName.equals("deadlift"))
             return randomChoice(Arrays.asList("barbell deadlift", "barbell romanian deadlift", "dumbbell romanian deadlift"));
 
-        if (exerciseName.equals("dumbbell flye"))
+        if (exerciseName.equals("dumbbell flye") || exerciseName.contains("fly"))
             return "dumbbell fly";
 
         if (exerciseName.equals("leg press"))

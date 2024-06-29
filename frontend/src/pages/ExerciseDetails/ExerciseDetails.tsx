@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { ExerciseType } from "../Workout/ExerciseTable";
-import { securedInstance } from "../../services/api";
+import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
+import {ExerciseType} from "../Workout/ExerciseTable";
+import {securedInstance} from "../../services/api";
 import ExerciseInfo from "./ExerciseInfo";
 import ExerciseVideos from "./ExerciseVideos";
 import SimilarExercises from "./SimilarExercises";

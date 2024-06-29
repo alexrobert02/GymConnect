@@ -29,8 +29,8 @@ spring:
   mail:
     host: smtp.mail.yahoo.com
     port: 587
-    username: alex_robert02@yahoo.com
-    password: tnhiybkkcnezovrs
+    username: gymconnect@yahoo.com
+    password: '#Licenta2024'
     properties:
       mail:
         smtp:

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Card, Button, Flex } from 'antd'; // Import Flex from Ant Design
-import { ExerciseType } from "../Workout/ExerciseTable";
+import {Button, Card, Flex} from 'antd'; // Import Flex from Ant Design
+import {ExerciseType} from "../Workout/ExerciseTable";
 import './ExerciseCard.scss';
+
 const { Meta } = Card;
 
 export interface ExerciseCardProps {

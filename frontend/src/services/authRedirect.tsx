@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import React, {ReactNode} from 'react';
+import {Navigate} from 'react-router-dom';
 
 const isAuthenticated = (): boolean => {
     const token = localStorage.getItem('token');

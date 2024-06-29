@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Menu, Dropdown, Space } from "antd";
-import { Link } from "react-router-dom";
-import { DownOutlined } from '@ant-design/icons';
-import { useJwt } from "react-jwt";
-import { useLocation } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Menu} from "antd";
+import {Link, useLocation} from "react-router-dom";
+import {useJwt} from "react-jwt";
 import logoImg from "../img/logo.png";
-import { securedInstance } from '../services/api';
 import Profile from "../pages/Profile/Profile";
 
 const linkStyles = { color: "white", fontFamily: 'Poppins, sans-serif', fontSize: '20px' };
@@ -20,18 +17,6 @@ function Navbar() {
         const storedToken = localStorage.getItem("token");
         setToken(storedToken);
     }, []);
-
-    // const profileMenuItems = [
-    //   {
-    //     key: 'logout',
-    //     label: (
-    //         <a onClick={handleLogout}>
-    //           Logout
-    //         </a>
-    //     ),
-    //     // style: linkStyles
-    //   },
-    // ];
 
     const items = [
         {
@@ -70,21 +55,6 @@ function Navbar() {
         {
             key: "6",
             title: "Profile",
-            //to: "/profile",
-            // label: (
-            //     <Dropdown menu={{ items: profileMenuItems }} >
-            //       <a onClick={(e) =>
-            //         {
-            //             e.preventDefault()
-            //             window.location.href = "/profile"}
-            //       }>
-            //         <Space >
-            //           Profile
-            //           <DownOutlined />
-            //         </Space>
-            //       </a>
-            //     </Dropdown>
-            // ),
             label: <Profile/>,
             style: { ...linkStyles, marginLeft: "auto", cursor: "default" },
         },
@@ -99,7 +69,7 @@ function Navbar() {
                 items.find(
                     (item) =>
                         item.to && location.pathname.startsWith(item.to)
-                )?.key || "1",
+                )?.key || "3",
             ]}
             mode="horizontal"
             items={modifiedItems}
