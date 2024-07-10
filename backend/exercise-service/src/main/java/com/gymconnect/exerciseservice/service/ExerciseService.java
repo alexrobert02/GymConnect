@@ -1,5 +1,6 @@
-package com.gymconnect.exerciseservice.exercise;
+package com.gymconnect.exerciseservice.service;
 
+import com.gymconnect.exerciseservice.dto.ExerciseDto;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -12,6 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("UastIncorrectHttpHeaderInspection")
 @Service
 @Slf4j
 public class ExerciseService {
@@ -94,23 +96,7 @@ public class ExerciseService {
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url + "/target/{target}")
                     .queryParam("limit", 1500);
 
-            ResponseEntity<List<ExerciseDto>> response = restTemplate.exchange(
-                    builder.buildAndExpand(target).toUriString(),
-                    HttpMethod.GET,
-                    requestEntity,
-                    new ParameterizedTypeReference<>() {
-                    },
-                    target
-            );
-
-            List<ExerciseDto> exercises = response.getBody();
-            if (exercises != null && !exercises.isEmpty()) {
-                Collections.shuffle(exercises);
-
-                return exercises.subList(0, Math.min(Integer.parseInt(limit), exercises.size()));
-            }
-
-            return Collections.emptyList();
+            return getRandomExercises(target, limit, requestEntity, builder);
 
         } catch (Exception e) {
             log.error("Something went wrong while getting value from RapidAPI", e);
@@ -120,6 +106,26 @@ public class ExerciseService {
                     e
             );
         }
+    }
+
+    public List<ExerciseDto> getRandomExercises(String target, String limit, HttpEntity<?> requestEntity, UriComponentsBuilder builder) {
+        ResponseEntity<List<ExerciseDto>> response = restTemplate.exchange(
+                builder.buildAndExpand(target).toUriString(),
+                HttpMethod.GET,
+                requestEntity,
+                new ParameterizedTypeReference<>() {
+                },
+                target
+        );
+
+        List<ExerciseDto> exercises = response.getBody();
+        if (exercises != null && !exercises.isEmpty()) {
+            Collections.shuffle(exercises);
+
+            return exercises.subList(0, Math.min(Integer.parseInt(limit), exercises.size()));
+        }
+
+        return Collections.emptyList();
     }
 
     public List<ExerciseDto> getRandomExercisesByEquipment(String type, String limit) {
@@ -133,23 +139,7 @@ public class ExerciseService {
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url + "/equipment/{type}")
                     .queryParam("limit", 1500);
 
-            ResponseEntity<List<ExerciseDto>> response = restTemplate.exchange(
-                    builder.buildAndExpand(type).toUriString(),
-                    HttpMethod.GET,
-                    requestEntity,
-                    new ParameterizedTypeReference<>() {
-                    },
-                    type
-            );
-
-            List<ExerciseDto> exercises = response.getBody();
-            if (exercises != null && !exercises.isEmpty()) {
-                Collections.shuffle(exercises);
-
-                return exercises.subList(0, Math.min(Integer.parseInt(limit), exercises.size()));
-            }
-
-            return Collections.emptyList();
+            return getRandomExercises(type, limit, requestEntity, builder);
 
         } catch (Exception e) {
             log.error("Something went wrong while getting value from RapidAPI", e);

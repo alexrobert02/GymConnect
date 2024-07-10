@@ -1,12 +1,13 @@
-package com.gymconnect.exerciseservice.exercise;
+package com.gymconnect.exerciseservice.controller;
 
+import com.gymconnect.exerciseservice.dto.ExerciseDto;
+import com.gymconnect.exerciseservice.service.ExerciseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/exercises")
 @RequiredArgsConstructor

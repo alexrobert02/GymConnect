@@ -78,17 +78,17 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
     }, 800);
 
     const handleFinish = () => {
-        console.log("exercise id:", form.getFieldsValue)
+        
         form.validateFields().then(values => {
-            console.log("exercise id:", values)
+            
             const selectedExercise = options.find(option => option.value === values.name);
-            console.log("selected exercise:")
+            
             if (selectedExercise) {
                 if(action === "add") {
                     createUserExercise(selectedExercise.id);
                 }
                 if(action === "edit") {
-                    console.log("on edit")
+                    
                     updateUserExercise(selectedExercise.id);
                 }
             }
@@ -104,8 +104,8 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
 
     const createUserExercise = (id: string) => {
         form.validateFields().then(values => {
-            console.log(values)
-            console.log("workoutDayId:", workoutDayId)
+            
+            
             const newExercise: { workoutDayId: string, exerciseId: string, sets: number, reps: number[], weight: number, rest: number } = {
                 workoutDayId: workoutDayId,
                 exerciseId: id,
@@ -114,10 +114,10 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
                 weight: values.weight,
                 rest: values.rest
             };
-            console.log('new exercise:', newExercise);
+            
             securedInstance.post("/api/v1/userExercise", newExercise)
                 .then(response => {
-                    console.log("Exercise submitted successfully:", response.data);
+                    
                     toast.success("Exercise added successfully!");
                 })
                 .catch(error => {
@@ -134,9 +134,9 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
     };
 
     const updateUserExercise = (id: string) => {
-        console.log("exercise id passed:", id)
+        
         form.validateFields().then(values => {
-            console.log(values)
+            
             const editedExercise: { workoutDayId: string, exerciseId: string, sets: number, reps: number[], weight: number, rest: number } = {
                 workoutDayId: workoutDayId,
                 exerciseId: id,
@@ -145,11 +145,11 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
                 weight: values.weight,
                 rest: values.rest
             };
-            console.log('edited exercise:', editedExercise);
-            console.log("exercise id:", exercise?.id)
+            
+            
             securedInstance.put(`/api/v1/userExercise/${exercise?.id}`, editedExercise)
                 .then(response => {
-                    console.log("Exercise submitted successfully:", response.data);
+                    
                     toast.success("Exercise edited successfully!");
                 })
                 .catch(error => {
@@ -181,7 +181,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ workoutDayId, isOpen, setIs
                     Cancel
                 </Button>,
                 <Button key="submit" type="primary" onClick={() => {
-                    console.log("action:",action);
+                    
                     handleFinish();
                 }}>
                     Save

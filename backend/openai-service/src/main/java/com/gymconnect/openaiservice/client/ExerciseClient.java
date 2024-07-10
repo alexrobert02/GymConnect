@@ -1,6 +1,6 @@
 package com.gymconnect.openaiservice.client;
 
-import com.gymconnect.openaiservice.openai.ExerciseResponse;
+import com.gymconnect.openaiservice.response.ExerciseResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -45,12 +45,10 @@ function RegisterPage() {
                 if (response.status === 200) {
                     // Registration successful
                     const data = await response.data;
-                    console.log('Registration successful:', data);
                     navigate('/')
                     // Handle successful registration, e.g., redirect to login page
                 } else {
                     // Registration failed
-                    console.log('Registration failed');
                     // Handle failed registration, e.g., display error message
                 }
             } catch (error) {

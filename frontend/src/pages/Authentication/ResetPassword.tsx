@@ -40,11 +40,7 @@ function ResetPasswordPage() {
             const decodedToken: any = jwtDecode(token);
             const email = decodedToken.sub;
 
-            console.log('Email:', email);
-
             try {
-                console.log('Password:', values.password);
-                console.log('Confirm:', values.confirmPassword);
 
                 const response = await api.put('/api/v1/users/reset-password', {
                     email: email,
@@ -54,11 +50,9 @@ function ResetPasswordPage() {
 
                 if (response.status === 200) {
                     // Registration successful
-                    console.log('Password changed!');
                     toast.success('Password changed!')
                     navigate('/login')
                 } else {
-                    console.log('Password reset failed!');
                     toast.error('Password reset failed!');
                 }
             } catch (error) {

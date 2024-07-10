@@ -3,6 +3,7 @@ package com.gymconnect.authservice.user;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum Permission {
     ADMIN_READ("admin:read"),
@@ -11,6 +12,5 @@ public enum Permission {
     ADMIN_DELETE("admin:delete")
     ;
 
-    @Getter
     private final String permission;
 }

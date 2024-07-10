@@ -28,7 +28,6 @@ function LoginPage() {
                     toast.success('You are successfully logged in!')
                     // Authentication successful
                     const data = await response.data
-                    console.log('Authentication successful:', data);
                     // Store the access token in localStorage
                     localStorage.setItem('token', data.access_token);
                     // Refresh the browser
@@ -39,7 +38,6 @@ function LoginPage() {
                 } else {
                     toast.error('Invalid email or password.')
                     // Authentication failed
-                    console.log('Authentication failed');
                     // Handle failed login, e.g., display error message
                 }
             } catch (error) {

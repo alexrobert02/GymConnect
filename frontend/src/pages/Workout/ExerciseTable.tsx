@@ -53,7 +53,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
 
     const handleImageClick = (exercise: ExerciseDataType) => {
         setCurrentExercise(exercise);
-        console.log("current exercise:", exercise);
+        
         setModalVisible(true);
     }
 
@@ -71,7 +71,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
         // Handle delete action here
         securedInstance.delete(`/api/v1/userExercise/${id}`)
             .then(response => {
-                console.log("Workout deleted successfully.", response);
+                
                 toast.success("Exercise deleted successfully!");
             })
             .catch(error => {
@@ -84,7 +84,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
     const onDeleteTable = () => {
         securedInstance.delete(`/api/v1/workoutDay/${workoutDayId}`)
             .then(response => {
-                console.log("Workout deleted successfully.", response);
+                
                 toast.success("Workout day deleted successfully.")
             })
             .catch(error => {
@@ -96,7 +96,7 @@ const ExerciseTable: React.FC<ExerciseTableProps> = React.memo(({ workoutId, wor
     const onEditTable = () => {
         setWorkoutFormVisible(true);
         setWorkoutAction("edit");
-        console.log("Workout Form Open")
+        
     }
 
     const handleAdd = () => {

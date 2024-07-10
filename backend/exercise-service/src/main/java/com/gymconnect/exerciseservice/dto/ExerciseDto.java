@@ -1,4 +1,4 @@
-package com.gymconnect.exerciseservice.exercise;
+package com.gymconnect.exerciseservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

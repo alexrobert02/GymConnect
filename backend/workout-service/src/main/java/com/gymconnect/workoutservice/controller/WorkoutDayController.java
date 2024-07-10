@@ -1,9 +1,7 @@
 package com.gymconnect.workoutservice.controller;
 
-import com.gymconnect.workoutservice.dto.UserExerciseDto;
 import com.gymconnect.workoutservice.dto.WorkoutDayDto;
 import com.gymconnect.workoutservice.model.Day;
-import com.gymconnect.workoutservice.model.UserExercise;
 import com.gymconnect.workoutservice.model.Workout;
 import com.gymconnect.workoutservice.model.WorkoutDay;
 import com.gymconnect.workoutservice.service.WorkoutDayService;
@@ -18,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/workoutDay")
 @RequiredArgsConstructor
@@ -53,37 +50,8 @@ public class WorkoutDayController {
         workout.addWorkoutDay(workoutDay);
         workoutService.updateWorkout(workout);
 
-        System.out.println(workoutDay.getId());
-
         return new ResponseEntity<>(workoutDay, HttpStatus.CREATED);
     }
-
-    public ResponseEntity<?> createUserExercise(@RequestBody UserExerciseDto userExerciseDto) {
-
-        Optional<WorkoutDay> optionalWorkout = workoutDayService.findById(userExerciseDto.getWorkoutDayId());
-        if (optionalWorkout.isPresent()) {
-            WorkoutDay workoutDay = optionalWorkout.get();
-            UserExercise userExercise = new UserExercise(userExerciseDto.getExerciseId(), userExerciseDto.getSets(), userExerciseDto.getReps(), userExerciseDto.getWeight(), userExerciseDto.getRest());
-            workoutDay.addUserExercise(userExercise);
-            workoutDayService.updateWorkoutDay(workoutDay);
-            return new ResponseEntity<>(userExercise, HttpStatus.CREATED);
-        } else {
-            String errorMessage = "Workout with id " + userExerciseDto.getWorkoutDayId() + " not found.";
-            return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
-        }
-    }
-
-//    @GetMapping("/day")
-//    public ResponseEntity<List<Workout>> getWorkoutsByUserAndDay(@RequestParam UUID userId, @RequestParam Day day) {
-//        List<Workout> workouts = workoutService.findByUserIdAndDay(userId, day);
-//        return new ResponseEntity<>(workouts, HttpStatus.OK);
-//    }
-
-//    @GetMapping("/user/{userId}")
-//    public ResponseEntity<List<WorkoutDayFromApi>> getAllWorkoutDaysByUserId(@PathVariable("userId") UUID userId) {
-//        List<WorkoutDayFromApi> workouts = workoutDayService.findByUserId(userId);
-//        return new ResponseEntity<>(workouts, HttpStatus.OK);
-//    }
 
     @GetMapping("/remaining-days/workout/{workoutId}")
     public ResponseEntity<List<Day>> getRemainingWorkoutDaysByUserId(@PathVariable("workoutId") UUID userId) {

@@ -134,7 +134,7 @@ const ProfilePage = () => {
                     );
 
             }
-            console.log(email);
+            
         }
     }
 

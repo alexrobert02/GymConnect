@@ -5,20 +5,16 @@ import com.gymconnect.workoutservice.model.Day;
 import com.gymconnect.workoutservice.model.Workout;
 import com.gymconnect.workoutservice.model.WorkoutDay;
 import com.gymconnect.workoutservice.repository.WorkoutDayRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class WorkoutDayService {
     private final WorkoutService workoutService;
     private final WorkoutDayRepository workoutDayRepository;
-    @Autowired
-    public WorkoutDayService(WorkoutService workoutService, WorkoutDayRepository workoutDayRepository) {
-        this.workoutService = workoutService;
-        this.workoutDayRepository = workoutDayRepository;
-    }
 
     public WorkoutDay createWorkoutDay(WorkoutDayDto workoutDayDto) {
         WorkoutDay workoutDay = new WorkoutDay(Day.valueOf(workoutDayDto.getDay()));

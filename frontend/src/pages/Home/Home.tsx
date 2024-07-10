@@ -11,7 +11,7 @@ const HomePage = () => {
     useEffect(() => {
         // Check if the user is authenticated (you might have your own logic here)
         const token = localStorage.getItem('token');
-        console.log("Token: ", token);
+        
         //fetchData()
     }, [navigate]);
 

@@ -1,4 +1,4 @@
-package com.gymconnect.openaiservice.openai;
+package com.gymconnect.openaiservice.service;
 
 
 import io.github.cdimascio.dotenv.Dotenv;
@@ -44,7 +44,6 @@ public class OpenAiService {
             JsonNode root = mapper.readTree(response.getBody());
             return root.get("choices").get(0).get("message").get("content").asText();
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

@@ -46,14 +46,14 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, da
         securedInstance
             .get(`/api/v1/workoutDay/remaining-days/workout/${workoutId}`)
             .then(response => {
-                console.log("Fetch successful");
+                
                 const data = response.data;
                 const exerciseValues: OptionValue[] = data.map((day: string) => ({
                     label: day,
                     value: day,
                 }));
                 setOptions(exerciseValues);
-                console.log(response.data);
+                
             })
             .catch(error => {
                 if (error.response && error.response.status === 404) {
@@ -74,7 +74,7 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, da
 
     const handleOk = () => {
         form.validateFields().then((values) => {
-            console.log('Received values:', values);
+            
             if(action === "create") {
                 saveWorkoutDay(values.workoutDay)
             }
@@ -93,7 +93,7 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, da
             day: day
         })
             .then(response => {
-                console.log('Workout saved successfully:', response.data);
+                
                 toast.success('Workout saved successfully!')
                 setIsModified(!isModified);
             })
@@ -108,7 +108,7 @@ const NewTableForm: React.FC<NewTableFormProps> = ({ workoutId, workoutDayId, da
             day: day
         })
             .then(response => {
-                console.log('Workout saved successfully:', response.data);
+                
                 toast.success('Workout saved successfully!')
                 setIsModified(!isModified)
             })

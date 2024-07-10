@@ -12,7 +12,7 @@ const GeneratedGrid: React.FC<WorkoutGridProps> = ({ workoutList, isModified, se
     const [workoutGrid, setWorkoutGrid] = useState<WorkoutDay[]>([])
 
     useEffect(() => {
-        console.log("useEffect in WorkoutGrid")
+        
         const sortedWorkoutList = [...workoutList].sort((a, b) => {
             const daysOfWeek = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
             return daysOfWeek.indexOf(a.day) - daysOfWeek.indexOf(b.day);

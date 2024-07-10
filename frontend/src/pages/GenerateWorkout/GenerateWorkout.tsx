@@ -69,16 +69,16 @@ const GenerateWorkout = () => {
                         name: workoutName
                     })
                         .then(async response => {
-                            console.log(response);
+                            
                             await Promise.all(workoutDays.map(async (workoutDay: any) => {
                                 await securedInstance.post('/api/v1/workoutDay', {
                                     workoutId: response.data.id,
                                     day: workoutDay.day.toUpperCase()
                                 })
                                     .then(async response => {
-                                        console.log(response)
+                                        
                                         await Promise.all(workoutDay.userExercises.map(async (userExercise: any) => {
-                                            console.log("workoutDay id:", response.data.id);
+                                            
                                             await securedInstance.post('/api/v1/userExercise', {
                                                 workoutDayId: response.data.id,
                                                 exerciseId: userExercise.exercise.id,
@@ -107,7 +107,7 @@ const GenerateWorkout = () => {
 
         }
 
-        console.log('Workout saved:', workoutName, workoutDays);
+        
         toast.success('Workout saved successfully!');
         //navigate('/workout');
         //window.location.reload();
@@ -118,7 +118,7 @@ const GenerateWorkout = () => {
         try {
             const values: UserData = await form.validateFields();
             values.goal="Muscle Gain"
-            console.log('Received values:', values);
+            
             setLoading(true);
 
             const response = await securedInstance.post('/api/v1/generate-workout', values, {
@@ -126,7 +126,7 @@ const GenerateWorkout = () => {
             });
 
             setWorkoutDays(response.data);
-            console.log("Response:", response.data);
+            
             setLoading(false);
         } catch (error) {
             console.error('Error:', error);

@@ -18,7 +18,9 @@ public class PasswordResetService {
     private final EmailService emailService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+
     public void sendPasswordResetEmail(String email) {
+
         var user = userRepository.findByEmail(email)
                 .orElseThrow();
         var jwtToken = jwtService.generatePasswordResetToken(user);
@@ -26,7 +28,16 @@ public class PasswordResetService {
         saveUserPasswordResetToken(user, jwtToken);
 
         String resetLink = "http://localhost:3000/reset-password/" + jwtToken;
-        emailService.sendEmail(email, "Password Reset Request", "Click the link to reset your password: " + resetLink);
+        String emailMessage = String.format("""
+                You are receiving this because you (or someone else) have requested the reset of the password for your account.
+
+                Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:
+
+                %s
+
+                If you did not request this, please ignore this email and your password will remain unchanged.""", resetLink);
+
+        emailService.sendEmail(email, "Password Reset Request", emailMessage);
     }
 
     private void saveUserPasswordResetToken(User savedUser, String jwtToken) {
@@ -42,7 +53,6 @@ public class PasswordResetService {
 
     private void revokeAllUserPasswordResetTokens(User user) {
         var validUserTokens = tokenRepository.findAllValidPasswordResetTokensByUser(user.getId());
-        System.out.println(validUserTokens);
         if (validUserTokens.isEmpty()) {
             return;
         }
@@ -52,7 +62,6 @@ public class PasswordResetService {
         });
         tokenRepository.saveAll(validUserTokens);
     }
-
 
     public void resetPassword(String token, String newPassword) {
         Token resetToken = tokenRepository.findByToken(token).orElseThrow(() -> new RuntimeException("Invalid token"));

@@ -12,7 +12,4 @@ public class WorkoutDayFromApi {
     private String day;
     private List<UserExerciseFromApi> userExercises = new ArrayList<>();
 
-    public void addUserExercise(UserExerciseFromApi userExercisefromApi) {
-        userExercises.add(userExercisefromApi);
-    }
 }

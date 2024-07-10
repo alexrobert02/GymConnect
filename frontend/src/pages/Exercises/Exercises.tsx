@@ -21,7 +21,7 @@ const Exercises: React.FC = () => {
     const [bodyParts, setBodyParts] = useState<OptionValue[]>([]);
 
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
-        console.log(info?.source, value);
+        
         if (info?.source !== "clear") {
             fetchExercises(value);
         }
@@ -42,7 +42,7 @@ const Exercises: React.FC = () => {
                 setBodyParts(bodyPartValues);
             })
             .catch(error => {
-                console.log(error)
+                
                 setBodyParts([])
             })
     }
@@ -60,7 +60,7 @@ const Exercises: React.FC = () => {
     //         }
     //     })
     //         .then(response => {
-    //             console.log(response);
+    //             
     //             setExercises(response.data);
     //             setLoading(false); // Set loading to false after successful fetch
     //         })
@@ -91,14 +91,14 @@ const Exercises: React.FC = () => {
         } else {
             exerciseData = response.data
         }
-        console.log(exerciseData)
+        
         setExercises(exerciseData)
         setLoading(false);
     };
 
     const handleBodyPartChange = (value: string) => {
         setSelectedBodyPart(value);
-        console.log(`Selected category: ${value}`);
+        
     };
 
     return (

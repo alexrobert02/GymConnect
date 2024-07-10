@@ -72,7 +72,7 @@ const WorkoutPage = () => {
                         .get(`/api/v1/workout/user/${id}`)
                         .then(response => {
                             setWorkoutList(response.status === 404 ? [] : response.data);
-                            console.log(response.data)
+                            
                             setLoading(false);
                         })
                         .catch(error => {

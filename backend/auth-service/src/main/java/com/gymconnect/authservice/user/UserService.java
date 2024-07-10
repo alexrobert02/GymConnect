@@ -36,8 +36,6 @@ public class UserService {
 
     public void resetPassword(ResetPasswordRequest request) {
 
-        System.out.println(request);
-
         Optional<User> userOptional = getUserByEmail(request.getEmail());
         if (userOptional.isPresent()) {
             var user = userOptional.get();

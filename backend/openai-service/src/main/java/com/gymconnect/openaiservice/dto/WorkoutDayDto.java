@@ -1,4 +1,4 @@
-package com.gymconnect.openaiservice.openai;
+package com.gymconnect.openaiservice.dto;
 
 import lombok.Data;
 

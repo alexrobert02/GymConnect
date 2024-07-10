@@ -26,17 +26,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/gymconnect_authservicedb
     username: postgres
     password: password
-  mail:
-    host: smtp.mail.yahoo.com
-    port: 587
-    username: gymconnect@yahoo.com
-    password: '#Licenta2024'
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
   jpa:
     hibernate:
       ddl-auto: update

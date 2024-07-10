@@ -1,16 +1,37 @@
-package com.gymconnect.openaiservice.openai;
+package com.gymconnect.openaiservice.service;
 
 import com.gymconnect.openaiservice.client.ExerciseClient;
-import lombok.RequiredArgsConstructor;
+import com.gymconnect.openaiservice.dto.UserExerciseDto;
+import com.gymconnect.openaiservice.dto.WorkoutDayDto;
+import com.gymconnect.openaiservice.response.ExerciseResponse;
+import com.gymconnect.openaiservice.response.UserExerciseResponse;
+import com.gymconnect.openaiservice.response.WorkoutDayResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 @Service
-@RequiredArgsConstructor
 public class DataTransformationService {
 
     private final ExerciseClient client;
+    private final Executor asyncExecutor;
+
+    @Autowired
+    public DataTransformationService(ExerciseClient client, @Qualifier("asyncExecutor") Executor asyncExecutor) {
+        this.client = client;
+        this.asyncExecutor = asyncExecutor;
+    }
 
     public List<WorkoutDayResponse> transformExercises(List<WorkoutDayDto> workoutDays) {
 
@@ -20,27 +41,34 @@ public class DataTransformationService {
             WorkoutDayResponse workoutDayResponse = new WorkoutDayResponse();
             workoutDayResponse.setDay(extractDay(workoutDay.getDay()));
 
-            List<UserExerciseResponse> userExercisesResponse = new ArrayList<>();
+            List<CompletableFuture<Optional<UserExerciseResponse>>> futures = new ArrayList<>();
 
             for (UserExerciseDto userExercise : workoutDay.getExercises()) {
-                ExerciseResponse exercise = getMatchedExercise(userExercise.getExercise());
-                if (exercise != null) {
-                    UserExerciseResponse userExerciseResponse = new UserExerciseResponse();
+                CompletableFuture<Optional<UserExerciseResponse>> future = CompletableFuture.supplyAsync(() -> {
+                    ExerciseResponse exercise = getMatchedExercise(userExercise.getExercise());
+                    if (exercise != null) {
+                        UserExerciseResponse userExerciseResponse = new UserExerciseResponse();
 
-                    userExerciseResponse.setExercise(exercise);
-                    userExerciseResponse.setSets(transformToNumber(userExercise.getSets()));
-                    userExerciseResponse.setReps(transformReps(userExercise.getReps(), userExerciseResponse.getSets()));
-                    userExerciseResponse.setWeight(transformToNumber(userExercise.getWeight()));
-                    userExerciseResponse.setRest(transformToNumber(userExercise.getRest()));
-                    userExercisesResponse.add(userExerciseResponse);
-                }
-                else {
-                    System.out.println("exercise skipped");
-                }
+                        userExerciseResponse.setExercise(exercise);
+                        userExerciseResponse.setSets(transformToNumber(userExercise.getSets()));
+                        userExerciseResponse.setReps(transformReps(userExercise.getReps(), userExerciseResponse.getSets()));
+                        userExerciseResponse.setWeight(transformToNumber(userExercise.getWeight()));
+                        userExerciseResponse.setRest(transformToNumber(userExercise.getRest()));
+                        return Optional.of(userExerciseResponse);
+                    } else {
+                        return Optional.empty();
+                    }
+                }, asyncExecutor);
+                futures.add(future);
             }
 
-            workoutDayResponse.setUserExercises(userExercisesResponse);
+            List<UserExerciseResponse> userExercisesResponse = futures.stream()
+                    .map(CompletableFuture::join)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toList());
 
+            workoutDayResponse.setUserExercises(userExercisesResponse);
             workoutDaysResponse.add(workoutDayResponse);
         }
 
@@ -48,15 +76,13 @@ public class DataTransformationService {
     }
 
     private int transformToNumber(String weight) {
-        return weight
-                .chars()
+        return weight.chars()
                 .filter(Character::isDigit)
                 .mapToObj(c -> String.valueOf((char) c))
                 .reduce((s1, s2) -> s1 + s2)
                 .map(Integer::parseInt)
                 .orElse(0);
     }
-
 
     public ExerciseResponse getMatchedExercise(String exerciseName) {
         List<ExerciseResponse> exercisesFromApi = client.findExerciseByName(matchExerciseName(exerciseName), 100);
@@ -87,7 +113,6 @@ public class DataTransformationService {
         exerciseName = exerciseName.replaceAll("\\b(tricep|bicep)\\b", "$1s");
 
         if (exerciseName.contains("dip"))
-
             if (exerciseName.equals("squat") || exerciseName.equals("barbell squat"))
                 return "barbell full squat";
 
@@ -170,7 +195,6 @@ public class DataTransformationService {
                 .findFirst()
                 .orElse("No day found");
     }
-
 
     public List<Integer> transformReps(String reps, int sets) {
         int repValue;

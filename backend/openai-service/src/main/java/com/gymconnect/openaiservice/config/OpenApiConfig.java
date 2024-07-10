@@ -1,4 +1,4 @@
-package com.gymconnect.workoutservice;
+package com.gymconnect.openaiservice.config;
 
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;

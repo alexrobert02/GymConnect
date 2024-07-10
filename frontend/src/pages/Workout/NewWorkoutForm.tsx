@@ -18,14 +18,14 @@ const NewWorkoutForm: React.FC<NewWorkoutFormProps> = ({ userId, isFormOpen, set
     const onFinish = () => {
         form.validateFields()
             .then(values => {
-                console.log(values.name)
-                console.log(userId)
+                
+                
                 securedInstance.post('/api/v1/workout', {
                     userId: userId,
                     name: values.name
                 })
                     .then(response => {
-                        console.log('Workout saved successfully:', response.data);
+                        
                         toast.success('Workout deleted successfully.')
                     })
                     .catch(error => {
@@ -33,7 +33,7 @@ const NewWorkoutForm: React.FC<NewWorkoutFormProps> = ({ userId, isFormOpen, set
                     })
                     .finally(() => setIsModified(!isModified))
                 form.resetFields();
-                console.log(values)
+                
                 setIsFormOpen(false);
 
             })

@@ -23,7 +23,7 @@ export const resetPassword = async (
     token: string
 ): Promise<void> => {
     try {
-        console.log(`/api/v1/auth/reset-password?token=${token}`);
+        
         await instance.post(`/api/v1/auth/reset-password?token=${token}`, {
             newPassword,
         });

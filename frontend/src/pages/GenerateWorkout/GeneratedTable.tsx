@@ -38,7 +38,7 @@ const GeneratedTable: React.FC<ExerciseTableProps> = React.memo(({ exerciseData,
 
     const handleImageClick = (exercise: ExerciseDataType) => {
         setCurrentExercise(exercise);
-        console.log("current exercise:", exercise);
+        
         setModalVisible(true);
     }
 
