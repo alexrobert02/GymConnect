@@ -1,5 +1,5 @@
 # GymConnect
-Bachelor Project 2024
+Bachelor's Project 2024
 
 ## Description
 GymConnect offers a comprehensive web application tailored for gym-goers of all levels. It provides a robust platform for users to search and access detailed information about a wide variety of fitness exercises, making it an invaluable resource for those new to the fitness world. Users can easily create and modify personalized workouts, ensuring convenient access to their routines.
